@@ -33,6 +33,9 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    // Doc: https://bootstrap-vue.js.org/docs/
+    // if you choosed Bootstrap Vue...
+    'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
   ],
@@ -41,6 +44,17 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
+    proxy: true,
+    credentials: true
+  },
+
+  proxy: {
+    '/api/': {
+      target: 'http://localhost:8080/project/api/',
+      pathRewrite: {
+        '^/api/': ''
+      }
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
