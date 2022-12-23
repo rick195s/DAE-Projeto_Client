@@ -2,13 +2,11 @@
     <div>
       <b-table striped over :items="policies" :fields="fields">
         <template #cell(actions)="row">
-          <nuxt-link class="btn btn-link" >
-            Details
-          </nuxt-link>
-          <span class="btn btn-link">
-            Delete
-          </span>
-        </template>
+        <nuxt-link class="btn btn-link" :to="`/occurrences/create/`">
+            Create Occurrence
+        </nuxt-link>
+
+      </template>
       </b-table>
       <nuxt-link to="/">
         Back
@@ -20,7 +18,7 @@
   export default {
     data () {
       return {
-        fields: ['id', 'clientId', 'startDate', 'endDate', 'state'],
+        fields: ['id', 'clientId', 'startDate', 'endDate', 'state', 'actions'],
         policies: []
       }
     },

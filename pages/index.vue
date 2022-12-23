@@ -7,7 +7,7 @@ export default {
     }
   },
   created() {
-    this.$axios.$get('http://localhost:8080/project/api/insurers/all')
+    this.$axios.$get('http://localhost:8080/project/api/insurers')
       .then((insurers) => {
         this.insurers = insurers
       })
