@@ -3,6 +3,9 @@
     <b-table
       :data="data"
       :loading="loading"
+      paginated
+      :total="data.length"
+      :per-page="5"
     >
       <b-table-column
         v-for="(column, index) in columns"
