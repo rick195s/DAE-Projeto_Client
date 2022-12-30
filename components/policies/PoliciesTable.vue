@@ -1,12 +1,5 @@
 <template>
   <div>
-    <modal-box
-      :is-active="isModalActive"
-      :trash-object-name="trashObject ? trashObject.name : null"
-      @confirm="trashConfirm"
-      @cancel="trashCancel"
-    />
-
     <b-table
       :data="data"
       :loading="loading"
@@ -16,6 +9,7 @@
         :key="index"
         v-slot="props"
         :label="column.label"
+        :centered="column.centered"
       >
         {{ props.row[column.field] }}
       </b-table-column>
@@ -59,11 +53,8 @@
 </template>
 
 <script>
-import ModalBox from '@/components/ModalBox.vue'
-
 export default {
   name: 'TableComponent',
-  components: { ModalBox },
   props: {
     checkable: Boolean,
     isEmpty: Boolean,
@@ -95,23 +86,6 @@ export default {
   computed: {
     paginated () {
       return this.perPage < 0
-    }
-  },
-  methods: {
-    trashModalOpen (obj) {
-      this.trashObject = obj
-      this.isModalActive = true
-    },
-    trashConfirm () {
-      this.isModalActive = false
-
-      this.$buefy.snackbar.open({
-        message: 'Confirmed',
-        queue: false
-      })
-    },
-    trashCancel () {
-      this.isModalActive = false
     }
   }
 }
