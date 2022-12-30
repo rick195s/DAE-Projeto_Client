@@ -146,7 +146,7 @@ export default defineComponent({
   },
   computed: {
     paginated () {
-      return this.clients.length > this.perPage
+      return 0> this.perPage
     },
     ...mapState([
       'clients'

@@ -22,10 +22,7 @@
                 href="https://justboil.me"
                 target="_blank"
               >
-                <img
-                  src="../assets/justboil-logo.svg"
-                  alt="JustBoil.me"
-                >
+
               </a>
             </div>
           </div>
