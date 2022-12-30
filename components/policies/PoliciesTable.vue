@@ -33,28 +33,20 @@
           </b-button>
         </div>
       </b-table-column>
-      <section
+      <empty-section
         v-if="!loading"
         slot="empty"
-        class="section"
-      >
-        <div class="content has-text-grey has-text-centered">
-          <p>
-            <b-icon
-              icon="emoticon-sad"
-              size="is-large"
-            />
-          </p>
-          <p>Nothing's here&hellip;</p>
-        </div>
-      </section>
+      />
     </b-table>
   </div>
 </template>
 
 <script>
+import EmptySection from '@/components/EmptySection.vue'
+
 export default {
   name: 'TableComponent',
+  components: { EmptySection },
   props: {
     checkable: Boolean,
     isEmpty: Boolean,

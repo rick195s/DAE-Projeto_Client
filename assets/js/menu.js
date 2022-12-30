@@ -7,11 +7,11 @@ export default [
       label: 'Dashboard'
     }
   ],
-  'Examples',
+  'Resources',
   [
     {
-      to: '/tables',
-      label: 'Tables',
+      to: '/occurrences',
+      label: 'Occurrences',
       icon: 'table',
       updateMark: true
     },
