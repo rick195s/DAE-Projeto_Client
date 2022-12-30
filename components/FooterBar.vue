@@ -8,10 +8,8 @@
         <div class="level-left">
           <div class="level-item">
             <div class="footer-copyright">
-              <b>&copy; {{ year }}, JustBoil.me</b>. <a
-                href="https://github.com/vikdiesel/admin-one-vue-bulma-dashboard"
-                target="_blank"
-              >GitHub</a>
+              <b>&copy; {{ year }}, Projeto de Desenvolvimento de Aplicações
+                Empresariais</b>.
             </div>
           </div>
         </div>
@@ -21,9 +19,7 @@
               <a
                 href="https://justboil.me"
                 target="_blank"
-              >
-
-              </a>
+              />
             </div>
           </div>
         </div>
@@ -44,9 +40,7 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState([
-      'isFooterBarVisible'
-    ])
+    ...mapState(['isFooterBarVisible'])
   }
 })
 </script>

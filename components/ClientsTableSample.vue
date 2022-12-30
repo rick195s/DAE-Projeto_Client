@@ -2,108 +2,45 @@
   <div>
     <modal-box
       :is-active="isModalActive"
-      :trash-object-name="trashObject ? trashObject.name : null "
+      :trash-object-name="trashObject ? trashObject.name : null"
       @confirm="trashConfirm"
       @cancel="trashCancel"
     />
+
     <b-table
-      :checked-rows.sync="checkedRows"
-      :checkable="checkable"
-      :paginated="paginated"
-      :per-page="perPage"
-      :data="clients"
-      default-sort="name"
-      striped
-      hoverable
+      :data="data"
+      :loading="loading"
     >
       <b-table-column
+        v-for="(column, index) in columns"
+        :key="index"
         v-slot="props"
-        cell-class="has-no-head-mobile is-image-cell"
+        :label="column.label"
       >
-        <div class="image">
-          <img
-            :src="props.row.avatar"
-            class="is-rounded"
-          >
-        </div>
+        {{ props.row[column.field] }}
       </b-table-column>
-      <b-table-column
-        v-slot="props"
-        label="Name"
-        field="name"
-        sortable
-      >
-        {{ props.row.name }}
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        label="Company"
-        field="company"
-        sortable
-      >
-        {{ props.row.company }}
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        label="City"
-        field="city"
-        sortable
-      >
-        {{ props.row.city }}
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        cell-class="is-progress-col"
-        label="Progress"
-        field="progress"
-        sortable
-      >
-        <progress
-          class="progress is-small is-info"
-          :value="props.row.progress"
-          max="100"
-        >
-          {{ props.row.progress }}
-        </progress>
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        label="Created"
-      >
-        <small
-          class="has-text-grey is-abbr-like"
-          :title="props.row.created"
-        >{{ props.row.created }}</small>
-      </b-table-column>
+
       <b-table-column
         v-slot="props"
         custom-key="actions"
+        label="Actions"
         cell-class="is-actions-cell"
       >
-        <div class="buttons is-right no-wrap">
-          <router-link
-            :to="{name:'client.edit', params: {id: props.row.id}}"
-            class="button is-small is-info"
-          >
-            <b-icon
-              icon="account-edit"
-              size="is-small"
-            />
-          </router-link>
+        <div class="buttons no-wrap">
           <b-button
-            type="is-danger"
+            tag="router-link"
+            :to="`/policies/${props.row.id}/occurrences/create`"
+            type="is-link"
+            label="Create Occurrence"
+            icon="account-edit"
             size="is-small"
-            @click.prevent="trashModalOpen(props.row)"
           >
-            <b-icon
-              icon="trash-can"
-              size="is-small"
-            />
+            Docs
           </b-button>
         </div>
       </b-table-column>
-
       <section
+        v-if="!loading"
         slot="empty"
         class="section"
       >
@@ -122,11 +59,10 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
 import ModalBox from '@/components/ModalBox.vue'
 
-export default defineComponent({
+export default {
   name: 'ClientsTableSample',
   components: { ModalBox },
   props: {
@@ -135,22 +71,33 @@ export default defineComponent({
     perPage: {
       type: Number,
       default: 10
+    },
+    columns: {
+      type: Array,
+      required: true
+    },
+    data: {
+      type: Array,
+      required: true
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       checkedRows: [],
       isModalActive: false,
-      trashObject: null
+      trashObject: null,
+      isLoading: false
     }
   },
   computed: {
     paginated () {
-      return 0> this.perPage
+      return this.perPage < 0
     },
-    ...mapState([
-      'clients'
-    ])
+    ...mapState(['clients'])
   },
   methods: {
     trashModalOpen (obj) {
@@ -169,5 +116,5 @@ export default defineComponent({
       this.isModalActive = false
     }
   }
-})
+}
 </script>

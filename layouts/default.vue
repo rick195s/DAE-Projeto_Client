@@ -27,9 +27,15 @@ export default defineComponent({
     }
   },
   mounted () {
-
     this.$store.dispatch('toggleFullPage', false)
     this.$store.dispatch('asideDesktopOnlyToggle', true)
   },
+  created () {
+    this.$store.commit('user', {
+      name: 'John Doe',
+      email: 'john@example.com',
+      avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg'
+    })
+  }
 })
 </script>

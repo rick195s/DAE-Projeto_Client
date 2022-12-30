@@ -1,6 +1,5 @@
 <script>
 import { defineComponent } from 'vue'
-import chunk from 'lodash/chunk'
 
 export default defineComponent({
   name: 'TilesBlock',
@@ -11,26 +10,22 @@ export default defineComponent({
     }
   },
   render (createElement) {
-    const renderAncestor = elements => createElement(
-      'div',
-      { attrs: { class: 'tile is-ancestor' } },
-      elements.map((element) => {
-        return createElement('div', { attrs: { class: 'tile is-parent' } }, [
-          element
-        ])
-      })
-    )
+    console.log(this.$slots.default)
+    const renderAncestor = (elements) =>
+      createElement(
+        'div',
+        { attrs: { class: 'tile is-ancestor' } },
+        elements.map((element) => {
+          return createElement('div', { attrs: { class: 'tile is-parent' } }, [
+            element
+          ])
+        })
+      )
 
     if (this.$slots.default.length <= this.maxPerRow) {
       return renderAncestor(this.$slots.default)
     } else {
-      return createElement(
-        'div',
-        { attrs: { class: 'is-tiles-wrapper' } },
-        chunk(this.$slots.default, this.maxPerRow).map((group) => {
-          return renderAncestor(group)
-        })
-      )
+      return createElement('div', { attrs: { class: 'is-tiles-wrapper' } })
     }
   }
 })

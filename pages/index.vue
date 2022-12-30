@@ -29,16 +29,14 @@
           icon="account-multiple"
           :number="512"
           label="Clients"
-        />
-        <card-widget
+        /><card-widget
           class="tile is-child"
           type="is-info"
           icon="cart-outline"
           :number="7770"
           prefix="$"
           label="Sales"
-        />
-        <card-widget
+        /><card-widget
           class="tile is-child"
           type="is-success"
           icon="chart-timeline-variant"
@@ -47,12 +45,15 @@
           label="Performance"
         />
       </tiles-block>
-
       <card-component
-        title="Clients"
+        title="Policies"
         class="has-table has-mobile-sort-spaced"
       >
-        <clients-table-sample />
+        <clients-table-sample
+          :data="policies"
+          :columns="columns"
+          :loading="loading"
+        />
       </card-component>
     </section>
   </div>
@@ -76,12 +77,40 @@ export default {
     TilesBlock,
     HeroBar,
     TitleBar,
-    NotificationBar,
+    NotificationBar
   },
   data () {
     return {
       titleStack: ['Admin', 'Dashboard'],
       chartData: null,
+      policies: [],
+      loading: false,
+      columns: [
+        {
+          field: 'id',
+          label: 'ID',
+          numeric: true,
+          sortable: true
+        },
+        {
+          field: 'insurerId',
+          label: 'Insurer ID'
+        },
+        {
+          field: 'state',
+          label: 'State'
+        },
+        {
+          field: 'startDate',
+          label: 'Start Date',
+          centered: true
+        },
+        {
+          field: 'endDate',
+          label: 'End Date',
+          centered: true
+        }
+      ],
       chartOptions: {
         responsive: true,
         maintainAspectRatio: true,
@@ -107,5 +136,22 @@ export default {
       queue: false
     })
   },
+  created () {
+    this.loading = true
+    this.$axios
+      .$get('/api/policies/')
+      .then((policies) => {
+        this.policies = policies
+        this.loading = false
+      })
+      .catch((error) => {
+        this.$buefy.snackbar.open({
+          message: error.message,
+          type: 'is-danger',
+          queue: false
+        })
+        this.loading = false
+      })
+  }
 }
 </script>
