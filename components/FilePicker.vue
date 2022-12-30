@@ -1,9 +1,7 @@
 <template>
-  <b-field
-    class="file"
-  >
+  <b-field class="file">
     <b-upload
-      v-model="file"
+      :value="file"
       :accept="accept"
       @input="upload"
     >
@@ -38,25 +36,21 @@ export default defineComponent({
     type: {
       type: String,
       default: 'is-primary'
+    },
+    file: {
+      type: Object,
+      default: null
     }
   },
   emits: ['input'],
-  data () {
-    return {
-      file: null
-      // uploadPercent: 0
-    }
-  },
   computed: {
     buttonLabel () {
-      return this.file ? 'Pick another file' : 'Pick a file'
+      return this.$props.file ? 'Pick another file' : 'Pick a file'
     }
   },
   methods: {
-    upload (value) {
-      this.file = value
-
-      this.$emit('input', value)
+    upload (file) {
+      this.$emit('input', file)
 
       // Use this as an example for handling file uploads
       // let formData = new FormData()

@@ -10,7 +10,6 @@ export default defineComponent({
     }
   },
   render (createElement) {
-    console.log(this.$slots.default)
     const renderAncestor = (elements) =>
       createElement(
         'div',

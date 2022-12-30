@@ -1,87 +1,131 @@
 <template>
   <div>
-    <h1>Create a new Occurrence</h1>
-    <form :disabled="!isFormValid" @submit.prevent="create">
-      <b-form-group
-        id="description"
-        description="The description is required"
-        label="Enter occurrence description"
-        label-for="description"
-        :invalid-feedback="invalidDescriptionFeedback"
-        :state="isDescriptionValid"
+    <title-bar :title-stack="titleStack" />
+    <hero-bar>
+      Create Occurrence for Policy #{{ $route.params.id }}
+      <router-link
+        slot="right"
+        to="/"
+        class="button"
       >
-        <b-input
-          id="description"
-          v-model.trim="description"
-          :state="isDescriptionValid"
-          trim
-        />
-      </b-form-group>
-
-      <p v-show="errorMsg" class="text-danger">
-        {{ errorMsg }}
-      </p>
-      <nuxt-link to="/policies"> Return </nuxt-link>
-      <button type="reset" @click="reset">RESET</button>
-      <button :disabled="!isFormValid" @click.prevent="create">CREATE</button>
-    </form>
+        Dashboard
+      </router-link>
+    </hero-bar>
+    <section class="section is-main-section">
+      <card-component
+        title="New Occurrence"
+        icon="ballot"
+      >
+        <form @submit.prevent="formAction">
+          <b-field
+            label="Description"
+            message="Your description. Max 255 characters"
+            horizontal
+          >
+            <b-input
+              v-model="form.description"
+              type="textarea"
+              placeholder="Explain how the problem"
+              maxlength="255"
+              minlength="10"
+              required
+            />
+          </b-field>
+          <b-field
+            label="File"
+            horizontal
+          >
+            <file-picker
+              :file="customElementsForm.file"
+              type="is-info"
+              @input="(file) => (customElementsForm.file = file)"
+            />
+          </b-field>
+          <hr>
+          <b-field horizontal>
+            <b-field grouped>
+              <div class="control">
+                <b-button
+                  native-type="submit"
+                  type="is-info"
+                  :loading="isLoading"
+                >
+                  Submit
+                </b-button>
+              </div>
+              <div class="control">
+                <b-button
+                  type="is-info"
+                  native-type="button"
+                  outlined
+                  @click="formReset"
+                >
+                  Reset
+                </b-button>
+              </div>
+            </b-field>
+          </b-field>
+        </form>
+      </card-component>
+    </section>
   </div>
 </template>
+
 <script>
-export default {
-  data() {
+import { defineComponent } from 'vue'
+import TitleBar from '@/components/TitleBar.vue'
+import CardComponent from '@/components/CardComponent.vue'
+import FilePicker from '@/components/FilePicker.vue'
+import HeroBar from '@/components/HeroBar.vue'
+
+export default defineComponent({
+  name: 'FormsView',
+  components: {
+    HeroBar,
+    FilePicker,
+    CardComponent,
+    TitleBar
+  },
+  data () {
     return {
-      description: null,
-      errorMsg: false,
-    };
+      titleStack: ['Admin', 'New Occurrence'],
+      departments: ['Business Development', 'Marketing', 'Sales'],
+      form: {
+        description: null
+      },
+      customElementsForm: {
+        file: null
+      },
+      isLoading: false
+    }
   },
-  computed: {
-    invalidDescriptionFeedback() {
-      if (!this.description) {
-        return null;
-      }
-      const descriptionLen = this.description.length;
-      if (descriptionLen < 3 || descriptionLen > 15) {
-        return "The description must be between [3, 15] characters.";
-      }
-      return "";
-    },
-    isDescriptionValid() {
-      if (this.invalidDescriptionFeedback === null) {
-        return null;
-      }
-      return this.invalidDescriptionFeedback === "";
-    },
-
-    isFormValid() {
-      if (!this.isDescriptionValid) {
-        return false;
-      }
-
-      return true;
-    },
-  },
-
   methods: {
-    create() {
+    formAction () {
+      this.isLoading = true
+
       this.$axios
-        .$post("/api/occurrences", {
-          id: 4,
+        .$post('/api/occurrences', {
           policyId: this.$route.params.id,
           repairShopId: 1,
           clientId: 1,
-          description: this.description,
+          description: this.form.description
         })
         .then((response) => {
-          this.$router.push("/policies/");
+          this.$router.push('/policies/')
         })
         .catch((error) => {
-          this.errorMsg = error.response.data.message;
-        });
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: false
+          })
+        })
+      this.isLoading = false
     },
-    reset() {
-      this.errorMsg = false;
-    },
-  },
-};
+    formReset () {
+      this.form.description = null
+      this.customElementsForm.file = null
+    }
+  }
+})
 </script>

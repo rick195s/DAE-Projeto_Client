@@ -59,11 +59,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import ModalBox from '@/components/ModalBox.vue'
 
 export default {
-  name: 'ClientsTableSample',
+  name: 'TableComponent',
   components: { ModalBox },
   props: {
     checkable: Boolean,
@@ -96,8 +95,7 @@ export default {
   computed: {
     paginated () {
       return this.perPage < 0
-    },
-    ...mapState(['clients'])
+    }
   },
   methods: {
     trashModalOpen (obj) {

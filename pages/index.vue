@@ -49,7 +49,7 @@
         title="Policies"
         class="has-table has-mobile-sort-spaced"
       >
-        <clients-table-sample
+        <policies-table
           :data="policies"
           :columns="columns"
           :loading="loading"
@@ -65,13 +65,13 @@ import HeroBar from '@/components/HeroBar.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import ClientsTableSample from '@/components/ClientsTableSample.vue'
+import PoliciesTable from '@/components/policies/PoliciesTable.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    ClientsTableSample,
+    PoliciesTable,
     CardComponent,
     CardWidget,
     TilesBlock,
