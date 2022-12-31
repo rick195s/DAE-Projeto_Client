@@ -12,7 +12,7 @@ export default [
     {
       to: '/occurrences',
       label: 'Occurrences',
-      icon: 'table',
+      icon: 'format-list-checkbox',
       updateMark: true
     },
     {
