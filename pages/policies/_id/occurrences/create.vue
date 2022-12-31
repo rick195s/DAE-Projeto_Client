@@ -111,7 +111,7 @@ export default defineComponent({
           description: this.form.description
         })
         .then((response) => {
-          this.$router.push('/policies/')
+          this.$router.push('/')
         })
         .catch((error) => {
           this.$buefy.snackbar.open({

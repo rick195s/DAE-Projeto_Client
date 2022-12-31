@@ -89,8 +89,7 @@ export default {
         {
           field: 'id',
           label: 'ID',
-          numeric: true,
-          sortable: true
+          numeric: true
         },
         {
           field: 'insurerId',
@@ -98,7 +97,8 @@ export default {
         },
         {
           field: 'state',
-          label: 'State'
+          label: 'State',
+          sortable: true
         },
         {
           field: 'startDate',

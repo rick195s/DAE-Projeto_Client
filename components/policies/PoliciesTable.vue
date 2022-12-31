@@ -1,21 +1,18 @@
 <template>
   <div>
-    <modal-box
-      :is-active="isModalActive"
-      :trash-object-name="trashObject ? trashObject.name : null"
-      @confirm="trashConfirm"
-      @cancel="trashCancel"
-    />
-
     <b-table
       :data="data"
       :loading="loading"
+      paginated
+      :total="data.length"
+      :per-page="5"
     >
       <b-table-column
         v-for="(column, index) in columns"
         :key="index"
         v-slot="props"
         :label="column.label"
+        :centered="column.centered"
       >
         {{ props.row[column.field] }}
       </b-table-column>
@@ -39,31 +36,20 @@
           </b-button>
         </div>
       </b-table-column>
-      <section
+      <empty-section
         v-if="!loading"
         slot="empty"
-        class="section"
-      >
-        <div class="content has-text-grey has-text-centered">
-          <p>
-            <b-icon
-              icon="emoticon-sad"
-              size="is-large"
-            />
-          </p>
-          <p>Nothing's here&hellip;</p>
-        </div>
-      </section>
+      />
     </b-table>
   </div>
 </template>
 
 <script>
-import ModalBox from '@/components/ModalBox.vue'
+import EmptySection from '@/components/EmptySection.vue'
 
 export default {
   name: 'TableComponent',
-  components: { ModalBox },
+  components: { EmptySection },
   props: {
     checkable: Boolean,
     isEmpty: Boolean,
@@ -95,23 +81,6 @@ export default {
   computed: {
     paginated () {
       return this.perPage < 0
-    }
-  },
-  methods: {
-    trashModalOpen (obj) {
-      this.trashObject = obj
-      this.isModalActive = true
-    },
-    trashConfirm () {
-      this.isModalActive = false
-
-      this.$buefy.snackbar.open({
-        message: 'Confirmed',
-        queue: false
-      })
-    },
-    trashCancel () {
-      this.isModalActive = false
     }
   }
 }
