@@ -17,7 +17,7 @@ export default [
     },
     {
       to: '/repairshops',
-      label: 'RepairShops',
+      label: 'Repair Shops',
       icon: 'table',
       updateMark: true
     },
