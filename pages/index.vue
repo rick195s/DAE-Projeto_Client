@@ -142,7 +142,6 @@ export default {
       .$get('/api/policies/')
       .then((policies) => {
         this.policies = policies
-        this.loading = false
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
@@ -150,6 +149,8 @@ export default {
           type: 'is-danger',
           queue: false
         })
+      })
+      .finally(() => {
         this.loading = false
       })
   }

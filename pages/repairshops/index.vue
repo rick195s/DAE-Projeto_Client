@@ -62,16 +62,17 @@ export default defineComponent({
     this.$axios
       .$get('/api/repairshops/')
       .then((repairShops) => {
-        this.loading = false
         this.repairShops = repairShops
       })
       .catch((error) => {
-        this.loading = false
         this.$buefy.snackbar.open({
           message: error.message,
           type: 'is-danger',
           queue: true
         })
+      })
+      .finally(() => {
+        this.loading = false
       })
   }
 })

@@ -107,10 +107,14 @@ export default defineComponent({
     create () {
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
-      this.$axios.$post('/api/repairshops', this.form).then(() => {
-        this.$router.push('/repairshops')
-        this.isLoading = false
-      })
+      this.$axios
+        .$post('/api/repairshops', this.form)
+        .then(() => {
+          this.$router.push('/repairshops')
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
       // this.isLoading não vai atualizar
       // this.isLoading = false
     },
