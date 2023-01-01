@@ -62,6 +62,7 @@ export default defineComponent({
       .$get('/api/occurrences/')
       .then((occurrences) => {
         this.occurrences = occurrences
+        this.loading = false
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
@@ -69,8 +70,8 @@ export default defineComponent({
           type: 'is-danger',
           queue: true
         })
+        this.loading = false
       })
-    this.loading = false
   }
 })
 </script>
