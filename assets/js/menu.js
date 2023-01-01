@@ -16,6 +16,12 @@ export default [
       updateMark: true
     },
     {
+      to: '/repairshops',
+      label: 'RepairShops',
+      icon: 'table',
+      updateMark: true
+    },
+    {
       to: '/forms',
       label: 'Forms',
       icon: 'square-edit-outline'
