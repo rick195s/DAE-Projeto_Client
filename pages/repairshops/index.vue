@@ -11,6 +11,15 @@
         Dashboard
       </router-link>
     </hero-bar>
+
+    <router-link
+      slot="right"
+      to="/repairshops/create"
+      class="button"
+    >
+      Create Repair Shop
+    </router-link>
+
     <section class="section is-main-section">
       <notification-bar class="is-info">
         <div>
