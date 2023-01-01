@@ -16,50 +16,67 @@
         icon="ballot"
       >
         <form @submit.prevent="create">
-          <div>
-            <div>
-              <b-field
-                label="Name"
-                horizontal
-              >
-                <b-input
-                  v-model="name"
-                  type="text"
-                  placeholder="Manuel"
-                  required/>
-                </b-field>
-            </div>
-            <div>
-              <b-field
-                label="Email"
-                horizontal
-              >
-                <b-input
-                  v-model="email"
-                  type="email"
-                  placeholder="Manuel@gmail.com"
-                  required/>
-              </b-field>
-            </div>
-            <div>
-              <b-field
-                label="Phone Number"
-                horizontal
-              >
-                <b-input
-                  v-model="phone"
-                  type="number"
-                  placeholder="912345678"
-                  required/>
-              </b-field>
-            </div>
-          </div>
-          <div>
-            <hr>
-            <b-field horizontal>
-            <b-button type="is-info" native-type="submit">Create</b-button>
+          <b-field
+            label="Name"
+            horizontal
+          >
+            <b-input
+              v-model="form.name"
+              type="text"
+              maxlength="50"
+              placeholder="PCDIGA"
+              required
+            />
+          </b-field>
+
+          <b-field
+            label="Email"
+            horizontal
+          >
+            <b-input
+              v-model="form.email"
+              type="email"
+              placeholder="xyz@mail.pt"
+              required
+            />
+          </b-field>
+
+          <b-field
+            label="Phone Number"
+            horizontal
+          >
+            <b-input
+              v-model="form.phone"
+              type="tel"
+              required
+              placeholder="912345678"
+            />
+          </b-field>
+
+          <hr>
+          <b-field horizontal>
+            <b-field grouped>
+              <div class="control">
+                <b-button
+                  native-type="submit"
+                  type="is-info"
+                  :loading="isLoading"
+                >
+                  Submit
+                </b-button>
+              </div>
+              <div class="control">
+                <b-button
+                  type="is-info"
+                  native-type="button"
+                  outlined
+                  @click="reset"
+                >
+                  Reset
+                </b-button>
+              </div>
             </b-field>
-          </div>
+          </b-field>
         </form>
       </card-component>
     </section>
@@ -67,8 +84,7 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
-import {mapState} from 'vuex'
+import { defineComponent } from 'vue'
 import HeroBar from '@/components/HeroBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 
@@ -77,29 +93,31 @@ export default defineComponent({
     HeroBar,
     CardComponent
   },
-  data() {
+  data () {
     return {
-      loading: false,
-      name: '',
-      email: '',
-      phone: ''
+      form: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      isLoading: false
     }
   },
-  computed: {
-    ...mapState({
-      repairShops: state => state.repairShops
-    })
-  },
   methods: {
-    create() {
-      this.$axios.$post('/api/repairshops', {
-        name: this.name,
-        email: this.email,
-        phone: this.phone
+    create () {
+      this.isLoading = true
+      console.log('is loading : ' + this.isLoading)
+      this.$axios.$post('/api/repairshops', this.form).then(() => {
+        this.$router.push('/repairshops')
+        this.isLoading = false
       })
-        .then(() => {
-          this.$router.push('/repairshops')
-        })
+      // this.isLoading não vai atualizar
+      // this.isLoading = false
+    },
+    reset () {
+      this.form.name = ''
+      this.form.email = ''
+      this.form.phone = ''
     }
   }
 })
