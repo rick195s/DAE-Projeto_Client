@@ -27,7 +27,6 @@
               type="textarea"
               placeholder="Explain how the problem"
               maxlength="255"
-              minlength="10"
               required
             />
           </b-field>
@@ -115,7 +114,7 @@ export default defineComponent({
         })
         .catch((error) => {
           this.$buefy.snackbar.open({
-            message: error.message,
+            message: error.response?.data.reason || 'Something went wrong',
             type: 'is-danger',
             queue: false
           })
