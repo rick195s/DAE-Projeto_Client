@@ -51,7 +51,7 @@
             />
           </b-field>
           <b-field
-            v-if="occurrence.endDate"
+            v-if="occurrence?.endDate"
             label="Ended at"
           >
             <b-input
