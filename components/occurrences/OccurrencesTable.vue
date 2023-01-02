@@ -40,7 +40,23 @@
           {{ props.row.startDate }}
         </small>
       </b-table-column>
-
+      <b-table-column
+        v-slot="props"
+        custom-key="actions"
+        cell-class="is-actions-cell"
+      >
+        <div class="buttons is-right no-wrap">
+          <nuxt-link
+            :to="`/occurrences/${props.row.id}`"
+            class="button is-small is-info"
+          >
+            <b-icon
+              icon="arrow-expand-all"
+              size="is-small"
+            />
+          </nuxt-link>
+        </div>
+      </b-table-column>
       <empty-section
         v-if="!loading"
         slot="empty"
