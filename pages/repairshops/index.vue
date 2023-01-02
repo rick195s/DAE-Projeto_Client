@@ -71,7 +71,9 @@ export default defineComponent({
           queue: true
         })
       })
-    this.loading = false
+      .finally(() => {
+        this.loading = false
+      })
   }
 })
 </script>

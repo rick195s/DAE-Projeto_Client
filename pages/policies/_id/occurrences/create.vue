@@ -120,7 +120,9 @@ export default defineComponent({
             queue: false
           })
         })
-      this.isLoading = false
+        .finally(() => {
+          this.isLoading = false
+        })
     },
     formReset () {
       this.form.description = null
