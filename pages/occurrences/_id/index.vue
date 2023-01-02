@@ -20,13 +20,13 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <router-link
+      <nuxt-link
         slot="right"
         to="/"
         class="button"
       >
         Dashboard
-      </router-link>
+      </nuxt-link>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -43,6 +43,23 @@
             />
           </b-field>
           <hr>
+          <b-field label="Started at">
+            <b-input
+              :value="occurrence?.startDate ?? 'Start'"
+              custom-class="is-static"
+              readonly
+            />
+          </b-field>
+          <b-field
+            v-if="occurrence.endDate"
+            label="Ended at"
+          >
+            <b-input
+              :value="occurrence.endDate"
+              custom-class="is-static"
+              readonly
+            />
+          </b-field>
           <b-field label="Status">
             <b-input
               :value="occurrence?.approvalType ?? 'Status'"
@@ -55,6 +72,23 @@
           icon="account"
           class="tile is-child"
         >
+          <b-steps
+            v-model="stepIndex"
+            type="is-info"
+            :has-navigation="false"
+          >
+            <b-step-item icon="account-question-outline">
+              Waiting Approval From Insurance
+            </b-step-item>
+
+            <b-step-item icon="check" />
+
+            <b-step-item icon="account-question-outline">
+              Waiting Approval From Repair Expert
+            </b-step-item>
+
+            <b-step-item icon="check-all" />
+          </b-steps>
           <hr>
           <empty-section v-if="files.length == 0" />
           <span v-else>
@@ -96,7 +130,8 @@ export default defineComponent({
       files: [],
       isFileCardModalActive: false,
       selectedFile: null,
-      occurrence: null
+      occurrence: null,
+      stepIndex: 0
     }
   },
   created () {
@@ -105,6 +140,11 @@ export default defineComponent({
       .then((response) => {
         console.log(response)
         this.occurrence = response
+        response.historic.forEach((historic) => {
+          if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
+            this.stepIndex = 2
+          }
+        })
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
