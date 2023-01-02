@@ -27,6 +27,7 @@
               type="textarea"
               placeholder="Explain how the problem"
               maxlength="255"
+              minlength="10"
               required
             />
           </b-field>
