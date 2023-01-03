@@ -22,6 +22,12 @@ export default [
       updateMark: true
     },
     {
+      to: '/policyobjects',
+      label: 'Policy Objects',
+      icon: 'table',
+      updateMark: true
+    },
+    {
       to: '/forms',
       label: 'Forms',
       icon: 'square-edit-outline'
