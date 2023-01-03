@@ -98,7 +98,8 @@ export default defineComponent({
         .$post('/api/policy_objects', this.form)
         .then(() => {
           this.$router.push('/policyobjects')
-        }).catch((error) => {
+        })
+        .catch((error) => {
           alert(error.response.data.reason)
         })
         .finally(() => {

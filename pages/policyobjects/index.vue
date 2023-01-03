@@ -36,7 +36,7 @@
 <script>
 import { defineComponent } from 'vue'
 import NotificationBar from '@/components/NotificationBar.vue'
-import policyObjectsTable from '@/components/policyobjects/policyObjectsTable.vue'
+import PolicyObjectsTable from '@/components/policyobjects/PolicyObjectsTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
@@ -47,7 +47,7 @@ export default defineComponent({
     HeroBar,
     TitleBar,
     CardComponent,
-    policyObjectsTable,
+    PolicyObjectsTable,
     NotificationBar
   },
   data () {
