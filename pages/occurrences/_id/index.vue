@@ -98,6 +98,7 @@
               class="image is-128x128 is-clickable"
               :src="file.path"
               :alt="file.name"
+              @error="onImgError(file)"
               @click="activeFileModal(file)"
             >
           </span>
@@ -131,7 +132,9 @@ export default defineComponent({
       isFileCardModalActive: false,
       selectedFile: null,
       occurrence: null,
-      stepIndex: 0
+      stepIndex: 0,
+      defaultImg:
+        'https://ps.w.org/shortpixel-image-optimiser/assets/icon-256x256.png'
     }
   },
   created () {
@@ -139,6 +142,9 @@ export default defineComponent({
     this.getOccurrenceFiles()
   },
   methods: {
+    onImgError (file) {
+      file.path = this.defaultImg
+    },
     download (fileToDownload) {
       this.$axios
         .$get(
@@ -147,6 +153,7 @@ export default defineComponent({
         )
         .then((response) => {
           const url = window.URL.createObjectURL(new Blob([response]))
+
           this.files.push({
             path: url,
             name: fileToDownload.name
