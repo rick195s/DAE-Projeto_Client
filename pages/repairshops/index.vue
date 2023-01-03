@@ -52,7 +52,7 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: ['Admin', 'My Occurrences'],
+      titleStack: ['Admin', 'All Repair Shops'],
       loading: false,
       repairShops: []
     }

@@ -20,13 +20,28 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <nuxt-link
-        slot="right"
-        to="/"
-        class="button"
-      >
-        Dashboard
-      </nuxt-link>
+      <b-field grouped slot="right">
+        <div class="control">
+          <b-button
+            native-type="submit"
+            type="is-info"
+            outlined
+            @click="approveOccurrence"
+          >
+            Approve
+          </b-button>
+        </div>
+        <div class="control">
+          <b-button
+            type="is-info"
+            native-type="button"
+            outlined
+            @click="declineOccurrence"
+          >
+            Decline
+          </b-button>
+        </div>
+      </b-field>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -74,10 +89,10 @@
         >
           <b-steps
             v-model="stepIndex"
-            type="is-info"
+            :type=stepType
             :has-navigation="false"
           >
-            <b-step-item icon="account-question-outline">
+            <b-step-item :icon=iconStep0>
               Waiting Approval From Insurance
             </b-step-item>
 
@@ -131,7 +146,9 @@ export default defineComponent({
       isFileCardModalActive: false,
       selectedFile: null,
       occurrence: null,
-      stepIndex: 0
+      stepIndex: 0,
+      stepType: "is-info",
+      iconStep0: "account-question-outline"
     }
   },
   created () {
@@ -140,11 +157,9 @@ export default defineComponent({
       .then((response) => {
         console.log(response)
         this.occurrence = response
-        response.historic.forEach((historic) => {
-          if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
-            this.stepIndex = 2
-          }
-        })
+        response.historic[response.historic.length - 1].state == "APROVADO_PELA_SEGURADORA"
+          ? this.stepIndex = 2
+          : this.stepIndex = 0
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
@@ -158,6 +173,38 @@ export default defineComponent({
     activeFileModal (file) {
       this.isFileCardModalActive = true
       this.selectedFile = file
+    },
+    approveOccurrence () {
+      this.$axios
+        .$put(`/api/occurrences/${this.$route.params.id}/approved`)
+        .then((response) => {
+          console.log(response)
+          this.stepIndex = 2
+        })
+        .catch((error) => {
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: false
+          })
+        })
+    },
+    declineOccurrence() {
+      this.$axios
+        .$put(`/api/occurrences/${this.$route.params.id}/declined`)
+        .then((response) => {
+          console.log(response)
+          this.stepIndex = 0
+          this.stepType = "is-danger"
+          this.iconStep0 = "close-circle-outline"
+        })
+        .catch((error) => {
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: false
+          })
+        })
     }
   }
 })
