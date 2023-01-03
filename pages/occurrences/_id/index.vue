@@ -135,26 +135,62 @@ export default defineComponent({
     }
   },
   created () {
-    this.$axios
-      .$get(`/api/occurrences/${this.$route.params.id}`)
-      .then((response) => {
-        console.log(response)
-        this.occurrence = response
-        response.historic.forEach((historic) => {
-          if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
-            this.stepIndex = 2
-          }
-        })
-      })
-      .catch((error) => {
-        this.$buefy.snackbar.open({
-          message: error.message,
-          type: 'is-danger',
-          queue: false
-        })
-      })
+    this.getOccurrenceDetails()
+    this.getOccurrenceFiles()
   },
   methods: {
+    download (fileToDownload) {
+      this.$axios
+        .$get(
+          `/api/occurrences/${this.$route.params.id}/files/download/${fileToDownload.id}`,
+          { responseType: 'arraybuffer' }
+        )
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response]))
+          this.files.push({
+            path: url,
+            name: fileToDownload.name
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    getOccurrenceFiles () {
+      this.$axios
+        .$get(`/api/occurrences/${this.$route.params.id}/files`)
+        .then((response) => {
+          response.forEach((file) => {
+            this.download(file)
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    getOccurrenceDetails () {
+      this.$axios
+        .$get(`/api/occurrences/${this.$route.params.id}`)
+        .then((response) => {
+          console.log(response)
+          this.occurrence = response
+          response.historic.forEach((historic) => {
+            if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
+              this.stepIndex = 2
+            }
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    showError (message) {
+      this.$buefy.snackbar.open({
+        message,
+        type: 'is-danger',
+        queue: false
+      })
+    },
     activeFileModal (file) {
       this.isFileCardModalActive = true
       this.selectedFile = file
