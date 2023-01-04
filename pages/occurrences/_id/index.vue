@@ -7,7 +7,7 @@
     >
       <div class="card">
         <div class="card-image">
-          <figure class="image is-4by3">
+          <figure class="image">
             <img
               :src="selectedFile?.path"
               :alt="selectedFile?.name"
@@ -92,15 +92,13 @@
           <hr>
           <empty-section v-if="files.length == 0" />
           <span v-else>
-            <img
+            <file-card
               v-for="file in files"
               :key="file.path"
-              class="image is-128x128 is-clickable"
-              :src="file.path"
-              :alt="file.name"
-              @error="onImgError(file)"
-              @click="activeFileModal(file)"
-            >
+              :file="file"
+              @img-error="onImgError(file)"
+              @clicked-file="clickedFile(file)"
+            />
           </span>
         </card-component>
       </tiles-block>
@@ -115,6 +113,7 @@ import CardComponent from '@/components/CardComponent.vue'
 import HeroBar from '@/components/HeroBar.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
 import EmptySection from '@/components/EmptySection.vue'
+import FileCard from '@/components/FileCard.vue'
 
 export default defineComponent({
   name: 'FormsView',
@@ -123,7 +122,8 @@ export default defineComponent({
     CardComponent,
     TitleBar,
     TilesBlock,
-    EmptySection
+    EmptySection,
+    FileCard
   },
   data () {
     return {
@@ -134,7 +134,7 @@ export default defineComponent({
       occurrence: null,
       stepIndex: 0,
       defaultImg:
-        'https://ps.w.org/shortpixel-image-optimiser/assets/icon-256x256.png'
+        'https://www.iconpacks.net/icons/2/free-file-icon-1453-thumb.png'
     }
   },
   created () {
@@ -143,7 +143,7 @@ export default defineComponent({
   },
   methods: {
     onImgError (file) {
-      file.path = this.defaultImg
+      file.default = this.defaultImg
     },
     download (fileToDownload) {
       this.$axios
@@ -197,6 +197,18 @@ export default defineComponent({
         type: 'is-danger',
         queue: false
       })
+    },
+    clickedFile (file) {
+      if (!file.default) {
+        this.activeFileModal(file)
+      }
+
+      const link = document.createElement('a')
+      link.href = file.path
+      link.setAttribute('download', file.name)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
     },
     activeFileModal (file) {
       this.isFileCardModalActive = true
