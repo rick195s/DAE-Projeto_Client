@@ -2,13 +2,13 @@
   <div>
     <title-bar :title-stack="titleStack" />
     <hero-bar>
-      Repair Shops
+      Policy Objects
       <router-link
         slot="right"
-        to="/repairshops/create"
+        to="/policyobjects/create"
         class="button"
       >
-        Create Repair Shop
+        Create Policy Object
       </router-link>
     </hero-bar>
 
@@ -24,8 +24,8 @@
       </notification-bar>
 
       <card-component class="has-table has-mobile-sort-spaced">
-        <repairShops-table
-          :data="repairShops"
+        <policyObjects-table
+          :data="policyObjects"
           :loading="loading"
         />
       </card-component>
@@ -36,7 +36,7 @@
 <script>
 import { defineComponent } from 'vue'
 import NotificationBar from '@/components/NotificationBar.vue'
-import RepairShopsTable from '@/components/repairshops/RepairShopsTable.vue'
+import PolicyObjectsTable from '@/components/policyobjects/PolicyObjectsTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
@@ -47,22 +47,22 @@ export default defineComponent({
     HeroBar,
     TitleBar,
     CardComponent,
-    RepairShopsTable,
+    PolicyObjectsTable,
     NotificationBar
   },
   data () {
     return {
-      titleStack: ['Admin', 'All Repair Shops'],
+      titleStack: ['Admin', 'Policy Objects'],
       loading: false,
-      repairShops: []
+      policyObjects: []
     }
   },
   created () {
     this.loading = true
     this.$axios
-      .$get('/api/repairshops/')
-      .then((repairShops) => {
-        this.repairShops = repairShops
+      .$get('/api/policy_objects')
+      .then((policyObjects) => {
+        this.policyObjects = policyObjects
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
