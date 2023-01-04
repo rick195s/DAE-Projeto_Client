@@ -205,6 +205,7 @@ export default defineComponent({
       this.isMenuActive = !this.isMenuActive
     },
     logout () {
+      this.$store.commit('logout')
       this.$buefy.snackbar.open({
         message: 'Log out clicked',
         queue: false

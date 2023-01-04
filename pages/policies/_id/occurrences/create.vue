@@ -35,12 +35,43 @@
             label="File"
             horizontal
           >
-            <file-picker
-              :file="customElementsForm.file"
+            <b-upload
+              v-model="dropFiles"
               type="is-info"
-              @input="(file) => (customElementsForm.file = file)"
-            />
+              multiple
+              drag-drop
+            >
+              <section class="section">
+                <div class="content has-text-centered">
+                  <p>
+                    <b-icon
+                      icon="upload"
+                      size="is-large"
+                    />
+                  </p>
+                  <p>Drop your files here or click to upload</p>
+                </div>
+              </section>
+            </b-upload>
+            <div
+              horizontal
+              class="tags"
+            >
+              <span
+                v-for="(file, index) in dropFiles"
+                :key="index"
+                class="tag is-info"
+              >
+                {{ file.name }}
+                <button
+                  class="delete is-small"
+                  type="button"
+                  @click="deleteDropFile(index)"
+                />
+              </span>
+            </div>
           </b-field>
+
           <hr>
           <b-field horizontal>
             <b-field grouped>
@@ -75,14 +106,12 @@
 import { defineComponent } from 'vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import FilePicker from '@/components/FilePicker.vue'
 import HeroBar from '@/components/HeroBar.vue'
 
 export default defineComponent({
   name: 'FormsView',
   components: {
     HeroBar,
-    FilePicker,
     CardComponent,
     TitleBar
   },
@@ -93,14 +122,45 @@ export default defineComponent({
       form: {
         description: null
       },
-      customElementsForm: {
-        file: null
-      },
-      isLoading: false
+      isLoading: false,
+      dropFiles: []
     }
   },
+
   methods: {
+    deleteDropFile (index) {
+      this.dropFiles.splice(index, 1)
+    },
     formAction () {
+      this.createOccurrence()
+    },
+    uploadFiles (occurrenceId) {
+      this.isLoading = true
+      const formData = new FormData()
+
+      this.dropFiles.forEach((file) => {
+        formData.append('file', file)
+      })
+
+      this.$axios
+        .$post(`/api/occurrences/${occurrenceId}/files`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((response) => {
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.showError(
+            error.response?.data.reason || 'Something went wrong loading'
+          )
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+    createOccurrence () {
       this.isLoading = true
 
       this.$axios
@@ -111,22 +171,28 @@ export default defineComponent({
           description: this.form.description
         })
         .then((response) => {
-          this.$router.push('/')
+          if (this.dropFiles.length > 0) {
+            this.uploadFiles(response.id)
+          } else {
+            this.$router.push('/')
+          }
         })
         .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: false
-          })
+          this.showError(error.response?.data.reason || 'Something went wrong')
         })
         .finally(() => {
           this.isLoading = false
         })
     },
+    showError (message) {
+      this.$buefy.snackbar.open({
+        message,
+        type: 'is-danger',
+        queue: false
+      })
+    },
     formReset () {
       this.form.description = null
-      this.customElementsForm.file = null
     }
   }
 })

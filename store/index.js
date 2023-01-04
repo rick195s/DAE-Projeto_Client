@@ -5,7 +5,7 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 
-export const state= () =>({
+export const state = () =>({
   /* User */
   userName: null,
   userEmail: null,
@@ -43,6 +43,11 @@ export const mutations = {
     if (payload.avatar) {
       state.userAvatar = payload.avatar
     }
+  },
+
+  logout(state){
+    state.userName = null
+    state.userEmail = null
   },
 
   /* Aside Mobile */

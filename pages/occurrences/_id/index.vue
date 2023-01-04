@@ -7,7 +7,7 @@
     >
       <div class="card">
         <div class="card-image">
-          <figure class="image is-4by3">
+          <figure class="image">
             <img
               :src="selectedFile?.path"
               :alt="selectedFile?.name"
@@ -20,28 +20,13 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <b-field grouped slot="right">
-        <div class="control">
-          <b-button
-            native-type="submit"
-            type="is-info"
-            outlined
-            @click="approveOccurrence"
-          >
-            Approve
-          </b-button>
-        </div>
-        <div class="control">
-          <b-button
-            type="is-info"
-            native-type="button"
-            outlined
-            @click="declineOccurrence"
-          >
-            Decline
-          </b-button>
-        </div>
-      </b-field>
+      <nuxt-link
+        slot="right"
+        to="/"
+        class="button"
+      >
+        Dashboard
+      </nuxt-link>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -89,10 +74,10 @@
         >
           <b-steps
             v-model="stepIndex"
-            :type=stepType
+            type="is-info"
             :has-navigation="false"
           >
-            <b-step-item :icon=iconStep0>
+            <b-step-item icon="account-question-outline">
               Waiting Approval From Insurance
             </b-step-item>
 
@@ -107,14 +92,13 @@
           <hr>
           <empty-section v-if="files.length == 0" />
           <span v-else>
-            <img
+            <file-card
               v-for="file in files"
               :key="file.path"
-              class="image is-128x128 is-clickable"
-              :src="file.path"
-              :alt="file.name"
-              @click="activeFileModal(file)"
-            >
+              :file="file"
+              @img-error="onImgError(file)"
+              @clicked-file="clickedFile(file)"
+            />
           </span>
         </card-component>
       </tiles-block>
@@ -129,6 +113,7 @@ import CardComponent from '@/components/CardComponent.vue'
 import HeroBar from '@/components/HeroBar.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
 import EmptySection from '@/components/EmptySection.vue'
+import FileCard from '@/components/FileCard.vue'
 
 export default defineComponent({
   name: 'FormsView',
@@ -137,7 +122,8 @@ export default defineComponent({
     CardComponent,
     TitleBar,
     TilesBlock,
-    EmptySection
+    EmptySection,
+    FileCard
   },
   data () {
     return {
@@ -147,64 +133,85 @@ export default defineComponent({
       selectedFile: null,
       occurrence: null,
       stepIndex: 0,
-      stepType: "is-info",
-      iconStep0: "account-question-outline"
+      defaultImg: '~/assets/img/file.png'
     }
   },
   created () {
-    this.$axios
-      .$get(`/api/occurrences/${this.$route.params.id}`)
-      .then((response) => {
-        console.log(response)
-        this.occurrence = response
-        response.historic[response.historic.length - 1].state == "APROVADO_PELA_SEGURADORA"
-          ? this.stepIndex = 2
-          : this.stepIndex = 0
-      })
-      .catch((error) => {
-        this.$buefy.snackbar.open({
-          message: error.message,
-          type: 'is-danger',
-          queue: false
-        })
-      })
+    this.getOccurrenceDetails()
+    this.getOccurrenceFiles()
   },
   methods: {
+    onImgError (file) {
+      file.default = this.defaultImg
+    },
+    download (fileToDownload) {
+      this.$axios
+        .$get(
+          `/api/occurrences/${this.$route.params.id}/files/download/${fileToDownload.id}`,
+          { responseType: 'arraybuffer' }
+        )
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response]))
+
+          this.files.push({
+            path: url,
+            name: fileToDownload.name
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    getOccurrenceFiles () {
+      this.$axios
+        .$get(`/api/occurrences/${this.$route.params.id}/files`)
+        .then((response) => {
+          response.forEach((file) => {
+            this.download(file)
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    getOccurrenceDetails () {
+      this.$axios
+        .$get(`/api/occurrences/${this.$route.params.id}`)
+        .then((response) => {
+          console.log(response)
+          this.occurrence = response
+          response.historic.forEach((historic) => {
+            if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
+              this.stepIndex = 2
+            }
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+    },
+    showError (message) {
+      this.$buefy.snackbar.open({
+        message,
+        type: 'is-danger',
+        queue: false
+      })
+    },
+    clickedFile (file) {
+      if (!file.default) {
+        this.activeFileModal(file)
+      }
+
+      const link = document.createElement('a')
+      link.href = file.path
+      link.setAttribute('download', file.name)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    },
     activeFileModal (file) {
       this.isFileCardModalActive = true
       this.selectedFile = file
-    },
-    approveOccurrence () {
-      this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/approved`)
-        .then((response) => {
-          console.log(response)
-          this.stepIndex = 2
-        })
-        .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: false
-          })
-        })
-    },
-    declineOccurrence() {
-      this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/declined`)
-        .then((response) => {
-          console.log(response)
-          this.stepIndex = 0
-          this.stepType = "is-danger"
-          this.iconStep0 = "close-circle-outline"
-        })
-        .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: false
-          })
-        })
     }
   }
 })

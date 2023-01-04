@@ -12,20 +12,12 @@ export default [
     {
       to: '/occurrences',
       label: 'Occurrences',
-      icon: 'format-list-checkbox',
-      updateMark: true
+      icon: 'format-list-checkbox'
     },
     {
       to: '/repairshops',
       label: 'Repair Shops',
-      icon: 'table',
-      updateMark: true
-    },
-    {
-      to: '/policyobjects',
-      label: 'Policy Objects',
-      icon: 'table',
-      updateMark: true
+      icon: 'table'
     },
     {
       to: '/forms',
