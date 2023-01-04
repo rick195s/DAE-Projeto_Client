@@ -3,13 +3,6 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Policy Objects
-      <router-link
-        slot="right"
-        to="/policyobjects/create"
-        class="button"
-      >
-        Create Policy Object
-      </router-link>
     </hero-bar>
 
     <section class="section is-main-section">
