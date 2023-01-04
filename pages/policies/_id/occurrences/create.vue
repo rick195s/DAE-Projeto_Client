@@ -122,19 +122,43 @@ export default defineComponent({
       form: {
         description: null
       },
-      customElementsForm: {
-        file: null
-      },
       isLoading: false,
       dropFiles: []
     }
   },
+
   methods: {
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
     },
     formAction () {
       this.createOccurrence()
+    },
+    uploadFiles (occurrenceId) {
+      this.isLoading = true
+      const formData = new FormData()
+
+      this.dropFiles.forEach((file) => {
+        formData.append('file', file)
+      })
+
+      this.$axios
+        .$post(`/api/occurrences/${occurrenceId}/files`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((response) => {
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.showError(
+            error.response?.data.reason || 'Something went wrong loading'
+          )
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
     createOccurrence () {
       this.isLoading = true
@@ -147,13 +171,14 @@ export default defineComponent({
           description: this.form.description
         })
         .then((response) => {
-          this.$router.push('/')
+          if (this.dropFiles.length > 0) {
+            this.uploadFiles(response.id)
+          } else {
+            this.$router.push('/')
+          }
         })
         .catch((error) => {
-          this.showError(
-            error.response?.data.reason ||
-              'Something went wrong loading repair shops'
-          )
+          this.showError(error.response?.data.reason || 'Something went wrong')
         })
         .finally(() => {
           this.isLoading = false
@@ -168,7 +193,6 @@ export default defineComponent({
     },
     formReset () {
       this.form.description = null
-      this.customElementsForm.file = null
     }
   }
 })

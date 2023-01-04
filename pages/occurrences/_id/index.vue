@@ -20,31 +20,13 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <b-field
+      <nuxt-link
         slot="right"
-        grouped
+        to="/"
+        class="button"
       >
-        <div class="control">
-          <b-button
-            native-type="submit"
-            type="is-info"
-            outlined
-            @click="approveOccurrence"
-          >
-            Approve
-          </b-button>
-        </div>
-        <div class="control">
-          <b-button
-            type="is-info"
-            native-type="button"
-            outlined
-            @click="declineOccurrence"
-          >
-            Decline
-          </b-button>
-        </div>
-      </b-field>
+        Dashboard
+      </nuxt-link>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -92,10 +74,10 @@
         >
           <b-steps
             v-model="stepIndex"
-            :type="stepType"
+            type="is-info"
             :has-navigation="false"
           >
-            <b-step-item :icon="iconStep0">
+            <b-step-item icon="account-question-outline">
               Waiting Approval From Insurance
             </b-step-item>
 
@@ -151,10 +133,7 @@ export default defineComponent({
       selectedFile: null,
       occurrence: null,
       stepIndex: 0,
-      defaultImg:
-        'https://www.iconpacks.net/icons/2/free-file-icon-1453-thumb.png',
-      stepType: 'is-info',
-      iconStep0: 'account-question-outline'
+      defaultImg: '~/assets/img/file.png'
     }
   },
   created () {
@@ -233,38 +212,6 @@ export default defineComponent({
     activeFileModal (file) {
       this.isFileCardModalActive = true
       this.selectedFile = file
-    },
-    approveOccurrence () {
-      this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/approved`)
-        .then((response) => {
-          console.log(response)
-          this.stepIndex = 2
-        })
-        .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: false
-          })
-        })
-    },
-    declineOccurrence () {
-      this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/declined`)
-        .then((response) => {
-          console.log(response)
-          this.stepIndex = 0
-          this.stepType = 'is-danger'
-          this.iconStep0 = 'close-circle-outline'
-        })
-        .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: false
-          })
-        })
     }
   }
 })
