@@ -4,8 +4,7 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-
-export const state= () =>({
+export const state = () => ({
   /* User */
   userName: null,
   userEmail: null,
@@ -22,7 +21,7 @@ export const state= () =>({
   isAsideMobileExpanded: false,
 
   /* Sample data (commonly used) */
-  clients: [],
+  clients: []
 
 })
 
@@ -71,7 +70,7 @@ export const mutations = {
     state.isNavBarVisible = !payload
     state.isAsideVisible = !payload
     state.isFooterBarVisible = !payload
-  },
+  }
 
 }
 
@@ -116,7 +115,6 @@ export const actions = {
       })
   }
 }
-
 
 export const getters = {
   container: state => state.container

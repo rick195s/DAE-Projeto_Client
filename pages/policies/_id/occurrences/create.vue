@@ -31,47 +31,7 @@
               required
             />
           </b-field>
-          <b-field
-            label="File"
-            horizontal
-          >
-            <b-upload
-              v-model="dropFiles"
-              type="is-info"
-              multiple
-              drag-drop
-            >
-              <section class="section">
-                <div class="content has-text-centered">
-                  <p>
-                    <b-icon
-                      icon="upload"
-                      size="is-large"
-                    />
-                  </p>
-                  <p>Drop your files here or click to upload</p>
-                </div>
-              </section>
-            </b-upload>
-            <div
-              horizontal
-              class="tags"
-            >
-              <span
-                v-for="(file, index) in dropFiles"
-                :key="index"
-                class="tag is-info"
-              >
-                {{ file.name }}
-                <button
-                  class="delete is-small"
-                  type="button"
-                  @click="deleteDropFile(index)"
-                />
-              </span>
-            </div>
-          </b-field>
-
+          <file-upload ref="fileUploadComponent" />
           <hr>
           <b-field horizontal>
             <b-field grouped>
@@ -107,13 +67,15 @@ import { defineComponent } from 'vue'
 import TitleBar from '@/components/TitleBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import HeroBar from '@/components/HeroBar.vue'
+import FileUpload from '@/components/FileUpload.vue'
 
 export default defineComponent({
   name: 'FormsView',
   components: {
     HeroBar,
     CardComponent,
-    TitleBar
+    TitleBar,
+    FileUpload
   },
   data () {
     return {
@@ -122,15 +84,11 @@ export default defineComponent({
       form: {
         description: null
       },
-      isLoading: false,
-      dropFiles: []
+      isLoading: false
     }
   },
 
   methods: {
-    deleteDropFile (index) {
-      this.dropFiles.splice(index, 1)
-    },
     formAction () {
       this.createOccurrence()
     },
@@ -138,7 +96,7 @@ export default defineComponent({
       this.isLoading = true
       const formData = new FormData()
 
-      this.dropFiles.forEach((file) => {
+      this.$refs.fileUploadComponent.dropFiles.forEach((file) => {
         formData.append('file', file)
       })
 
@@ -171,7 +129,7 @@ export default defineComponent({
           description: this.form.description
         })
         .then((response) => {
-          if (this.dropFiles.length > 0) {
+          if (this.$refs.fileUploadComponent.dropFiles.length > 0) {
             this.uploadFiles(response.id)
           } else {
             this.$router.push('/')
