@@ -8,7 +8,7 @@
         <figure class="image is-64x64">
           <img
             class="image is-64x64"
-            :src="file.default ?? file.path"
+            :src="file.default ? require('~/assets/img/file.png') : file.path"
             :alt="file.name"
             @error="onImgError(file)"
           >
