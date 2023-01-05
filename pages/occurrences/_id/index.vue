@@ -146,7 +146,7 @@ export default defineComponent({
       this.iconStep0 = 'close-circle-outline'
     },
     onImgError (file) {
-      file.default = this.defaultImg
+      file.default = true
     },
     download (fileToDownload) {
       this.$axios
@@ -159,7 +159,8 @@ export default defineComponent({
 
           this.files.push({
             path: url,
-            name: fileToDownload.name
+            name: fileToDownload.name,
+            default: false
           })
         })
         .catch((error) => {
