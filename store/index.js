@@ -48,6 +48,10 @@ export const mutations = {
     }
   },
 
+  token(state, payload) {
+    state.token = payload
+  },
+
   logout (state) {
     state.userName = null
     state.userEmail = null

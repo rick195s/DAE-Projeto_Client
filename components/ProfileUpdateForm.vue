@@ -6,13 +6,6 @@
     <form @submit.prevent="submit">
       <b-field
         horizontal
-        label="Avatar"
-      >
-        <file-picker type="is-info" />
-      </b-field>
-      <hr>
-      <b-field
-        horizontal
         label="Name"
         message="Required. Your name"
       >
@@ -63,14 +56,12 @@
 
 <script>
 import { defineComponent } from 'vue'
-import FilePicker from '@/components/FilePicker.vue'
 import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
   name: 'ProfileUpdateForm',
   components: {
-    CardComponent,
-    FilePicker
+    CardComponent
   },
   data () {
     return {

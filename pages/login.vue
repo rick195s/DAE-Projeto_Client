@@ -108,6 +108,7 @@ export default defineComponent({
             queue: true
           })
           console.log(tokenAux)
+          this.$store.commit('token', tokenAux)
           const config = {
             headers: { Authorization: `Bearer ${tokenAux}` }
           }
