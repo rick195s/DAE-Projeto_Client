@@ -48,10 +48,31 @@ export default {
       isLoading: false
     }
   },
-  expose: ['dropFiles'],
+  expose: ['uploadFiles'],
   methods: {
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
+    },
+    uploadFiles (occurrenceId) {
+      if (this.dropFiles.length === 0) {
+        return
+      }
+
+      const formData = new FormData()
+
+      this.dropFiles.forEach((file) => {
+        formData.append('file', file)
+      })
+
+      return this.$axios.$post(
+        `/api/occurrences/${occurrenceId}/files`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
     }
   }
 }

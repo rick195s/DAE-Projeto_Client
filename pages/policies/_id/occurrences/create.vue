@@ -92,32 +92,6 @@ export default defineComponent({
     formAction () {
       this.createOccurrence()
     },
-    uploadFiles (occurrenceId) {
-      this.isLoading = true
-      const formData = new FormData()
-
-      this.$refs.fileUploadComponent.dropFiles.forEach((file) => {
-        formData.append('file', file)
-      })
-
-      this.$axios
-        .$post(`/api/occurrences/${occurrenceId}/files`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then((response) => {
-          this.$router.push('/')
-        })
-        .catch((error) => {
-          this.showError(
-            error.response?.data.reason || 'Something went wrong loading'
-          )
-        })
-        .finally(() => {
-          this.isLoading = false
-        })
-    },
     createOccurrence () {
       this.isLoading = true
 
@@ -128,12 +102,11 @@ export default defineComponent({
           clientId: 1,
           description: this.form.description
         })
-        .then((response) => {
-          if (this.$refs.fileUploadComponent.dropFiles.length > 0) {
-            this.uploadFiles(response.id)
-          } else {
-            this.$router.push('/')
-          }
+        .then((response) =>
+          this.$refs.fileUploadComponent.uploadFiles(response.id)
+        )
+        .then(() => {
+          this.$router.push('/')
         })
         .catch((error) => {
           this.showError(error.response?.data.reason || 'Something went wrong')
