@@ -20,13 +20,11 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <nuxt-link
+      <action-buttons
         slot="right"
-        to="/"
-        class="button"
-      >
-        Dashboard
-      </nuxt-link>
+        @approved="stepIndex = 2"
+        @declined="declined"
+      />
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -74,19 +72,16 @@
         >
           <b-steps
             v-model="stepIndex"
-            type="is-info"
+            :type="stepType"
             :has-navigation="false"
           >
-            <b-step-item icon="account-question-outline">
+            <b-step-item :icon="iconStep0">
               Waiting Approval From Insurance
             </b-step-item>
-
             <b-step-item icon="check" />
-
             <b-step-item icon="account-question-outline">
-              Waiting Approval From Repair Expert
+              Waiting Repair From Repair Expert
             </b-step-item>
-
             <b-step-item icon="check-all" />
           </b-steps>
           <hr>
@@ -114,6 +109,7 @@ import HeroBar from '@/components/HeroBar.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
 import EmptySection from '@/components/EmptySection.vue'
 import FileCard from '@/components/FileCard.vue'
+import ActionButtons from '@/components/occurrences/ActionButtons.vue'
 
 export default defineComponent({
   name: 'FormsView',
@@ -123,7 +119,8 @@ export default defineComponent({
     TitleBar,
     TilesBlock,
     EmptySection,
-    FileCard
+    FileCard,
+    ActionButtons
   },
   data () {
     return {
@@ -133,7 +130,9 @@ export default defineComponent({
       selectedFile: null,
       occurrence: null,
       stepIndex: 0,
-      defaultImg: '~/assets/img/file.png'
+      defaultImg: '~/assets/img/file.png',
+      iconStep0: 'account-question-outline',
+      stepType: 'is-info'
     }
   },
   created () {
@@ -141,8 +140,13 @@ export default defineComponent({
     this.getOccurrenceFiles()
   },
   methods: {
+    declined () {
+      this.stepIndex = 0
+      this.stepType = 'is-danger'
+      this.iconStep0 = 'close-circle-outline'
+    },
     onImgError (file) {
-      file.default = this.defaultImg
+      file.default = true
     },
     download (fileToDownload) {
       this.$axios
@@ -155,7 +159,8 @@ export default defineComponent({
 
           this.files.push({
             path: url,
-            name: fileToDownload.name
+            name: fileToDownload.name,
+            default: false
           })
         })
         .catch((error) => {
