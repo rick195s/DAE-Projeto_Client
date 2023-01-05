@@ -29,6 +29,20 @@
     <section class="section is-main-section">
       <tiles-block>
         <card-component
+          title="Photos of repaired object"
+          icon="account"
+          class="tile is-child"
+        >
+          <file-upload ref="fileUploadComponent" />
+          <form-buttons
+            :loading="loading"
+            @submit="uploadFiles"
+            @reset="$refs.fileUploadComponent.resetFiles()"
+          />
+        </card-component>
+      </tiles-block>
+      <tiles-block>
+        <card-component
           title="Details"
           icon="account"
           class="tile is-child"
@@ -54,13 +68,6 @@
           >
             <b-input
               :value="occurrence.endDate"
-              custom-class="is-static"
-              readonly
-            />
-          </b-field>
-          <b-field label="Status">
-            <b-input
-              :value="occurrence?.approvalType ?? 'Status'"
               custom-class="is-static"
               readonly
             />
@@ -109,6 +116,8 @@ import HeroBar from '@/components/HeroBar.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
 import EmptySection from '@/components/EmptySection.vue'
 import FileCard from '@/components/FileCard.vue'
+import FileUpload from '@/components/FileUpload.vue'
+import FormButtons from '@/components/FormButtons.vue'
 import ActionButtons from '@/components/occurrences/ActionButtons.vue'
 
 export default defineComponent({
@@ -120,7 +129,9 @@ export default defineComponent({
     TilesBlock,
     EmptySection,
     FileCard,
-    ActionButtons
+    FileUpload,
+    ActionButtons,
+    FormButtons
   },
   data () {
     return {
@@ -132,7 +143,8 @@ export default defineComponent({
       stepIndex: 0,
       defaultImg: '~/assets/img/file.png',
       iconStep0: 'account-question-outline',
-      stepType: 'is-info'
+      stepType: 'is-info',
+      loading: false
     }
   },
   created () {
@@ -140,6 +152,21 @@ export default defineComponent({
     this.getOccurrenceFiles()
   },
   methods: {
+    uploadFiles () {
+      this.loading = true
+      this.$refs.fileUploadComponent
+        .uploadFiles(this.$route.params.id)
+        .then(() => {
+          this.getOccurrenceFiles()
+          this.$refs.fileUploadComponent.resetFiles()
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
     declined () {
       this.stepIndex = 0
       this.stepType = 'is-danger'
@@ -168,6 +195,7 @@ export default defineComponent({
         })
     },
     getOccurrenceFiles () {
+      this.files = []
       this.$axios
         .$get(`/api/occurrences/${this.$route.params.id}/files`)
         .then((response) => {

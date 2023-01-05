@@ -22,7 +22,7 @@ export const state = () => ({
   isAsideMobileExpanded: false,
 
   /* Sample data (commonly used) */
-  clients: [],
+  clients: []
 
 })
 
@@ -83,7 +83,7 @@ export const mutations = {
     state.isNavBarVisible = !payload
     state.isAsideVisible = !payload
     state.isFooterBarVisible = !payload
-  },
+  }
 
 }
 
@@ -128,7 +128,6 @@ export const actions = {
       })
   }
 }
-
 
 export const getters = {
   container: state => state.container
