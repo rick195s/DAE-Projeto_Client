@@ -132,8 +132,7 @@ export default defineComponent({
       isFileCardModalActive: false,
       selectedFile: null,
       occurrence: null,
-      stepIndex: 0,
-      defaultImg: '~/assets/img/file.png'
+      stepIndex: 0
     }
   },
   created () {
@@ -142,7 +141,7 @@ export default defineComponent({
   },
   methods: {
     onImgError (file) {
-      file.default = this.defaultImg
+      file.default = true
     },
     download (fileToDownload) {
       this.$axios
@@ -155,7 +154,8 @@ export default defineComponent({
 
           this.files.push({
             path: url,
-            name: fileToDownload.name
+            name: fileToDownload.name,
+            default: false
           })
         })
         .catch((error) => {
