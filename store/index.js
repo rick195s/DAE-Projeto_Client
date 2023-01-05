@@ -4,12 +4,12 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
-
-export const state= () =>({
+export const state = () => ({
   /* User */
   userName: null,
   userEmail: null,
   userAvatar: null,
+  userRole: null,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -43,6 +43,18 @@ export const mutations = {
     if (payload.avatar) {
       state.userAvatar = payload.avatar
     }
+    if (payload.role) {
+      state.userRole = payload.role
+    }
+  },
+
+  token(state, payload) {
+    state.token = payload
+  },
+
+  logout (state) {
+    state.userName = null
+    state.userEmail = null
   },
 
   /* Aside Mobile */
