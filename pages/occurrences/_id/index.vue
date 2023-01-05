@@ -34,7 +34,11 @@
           class="tile is-child"
         >
           <file-upload ref="fileUploadComponent" />
-          <form-buttons @submit="uploadFiles" />
+          <form-buttons
+            :loading="loading"
+            @submit="uploadFiles"
+            @reset="$refs.fileUploadComponent.resetFiles()"
+          />
         </card-component>
       </tiles-block>
       <tiles-block>
@@ -139,7 +143,8 @@ export default defineComponent({
       stepIndex: 0,
       defaultImg: '~/assets/img/file.png',
       iconStep0: 'account-question-outline',
-      stepType: 'is-info'
+      stepType: 'is-info',
+      loading: false
     }
   },
   created () {
@@ -148,7 +153,19 @@ export default defineComponent({
   },
   methods: {
     uploadFiles () {
-      this.$refs.fileUploadComponent.uploadFiles(this.$route.params.id)
+      this.loading = true
+      this.$refs.fileUploadComponent
+        .uploadFiles(this.$route.params.id)
+        .then(() => {
+          this.getOccurrenceFiles()
+          this.$refs.fileUploadComponent.resetFiles()
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     declined () {
       this.stepIndex = 0
@@ -178,6 +195,7 @@ export default defineComponent({
         })
     },
     getOccurrenceFiles () {
+      this.files = []
       this.$axios
         .$get(`/api/occurrences/${this.$route.params.id}/files`)
         .then((response) => {

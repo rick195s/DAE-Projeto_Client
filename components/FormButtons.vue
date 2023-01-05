@@ -5,6 +5,7 @@
         <b-button
           native-type="submit"
           type="is-info"
+          :loading="loading"
           @click="submit"
         >
           Submit
@@ -26,6 +27,12 @@
 <script>
 export default {
   name: 'FormButtons',
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
     submit () {
       this.$emit('submit')

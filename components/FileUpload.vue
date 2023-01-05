@@ -44,8 +44,7 @@
 export default {
   data () {
     return {
-      dropFiles: [],
-      isLoading: false
+      dropFiles: []
     }
   },
   expose: ['uploadFiles'],
@@ -53,9 +52,12 @@ export default {
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
     },
+    resetFiles () {
+      this.dropFiles = []
+    },
     uploadFiles (occurrenceId) {
       if (this.dropFiles.length === 0) {
-        return
+        return Promise.reject(new Error('No files to upload'))
       }
 
       const formData = new FormData()

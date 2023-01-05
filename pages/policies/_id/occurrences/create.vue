@@ -33,29 +33,12 @@
           </b-field>
           <file-upload ref="fileUploadComponent" />
           <hr>
-          <b-field horizontal>
-            <b-field grouped>
-              <div class="control">
-                <b-button
-                  native-type="submit"
-                  type="is-info"
-                  :loading="isLoading"
-                >
-                  Submit
-                </b-button>
-              </div>
-              <div class="control">
-                <b-button
-                  type="is-info"
-                  native-type="button"
-                  outlined
-                  @click="formReset"
-                >
-                  Reset
-                </b-button>
-              </div>
-            </b-field>
-          </b-field>
+
+          <form-buttons
+            :loading="loading"
+            @submit="$refs.fileUploadComponent.uploadFiles($route.params.id)"
+            @reset="formReset"
+          />
         </form>
       </card-component>
     </section>
@@ -84,7 +67,7 @@ export default defineComponent({
       form: {
         description: null
       },
-      isLoading: false
+      loading: false
     }
   },
 
@@ -93,7 +76,7 @@ export default defineComponent({
       this.createOccurrence()
     },
     createOccurrence () {
-      this.isLoading = true
+      this.loading = true
 
       this.$axios
         .$post('/api/occurrences', {
@@ -112,7 +95,7 @@ export default defineComponent({
           this.showError(error.response?.data.reason || 'Something went wrong')
         })
         .finally(() => {
-          this.isLoading = false
+          this.loading = false
         })
     },
     showError (message) {
@@ -123,6 +106,7 @@ export default defineComponent({
       })
     },
     formReset () {
+      this.$refs.fileUploadComponent.resetFiles()
       this.form.description = null
     }
   }
