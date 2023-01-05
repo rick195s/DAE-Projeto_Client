@@ -87,7 +87,7 @@
             </a>
           </div>
         </nav-bar-menu>
-        <nav-bar-menu class="has-divider has-user-avatar">
+        <nav-bar-menu v-if="userName" class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
             <span>{{ userName }}</span>

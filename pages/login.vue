@@ -81,8 +81,8 @@ export default defineComponent({
       isLoading: false,
       user: [],
       form: {
-        email: 'lorenz.schumm@yahoo.com',
-        password: '123',
+        email: '',
+        password: '',
         remember: false
       }
     }
