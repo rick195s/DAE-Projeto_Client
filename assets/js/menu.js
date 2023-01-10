@@ -20,6 +20,11 @@ export default [
       icon: 'table'
     },
     {
+      to: '/users',
+      label: 'Users',
+      icon: 'table'
+    },
+    {
       to: '/forms',
       label: 'Forms',
       icon: 'square-edit-outline'
@@ -32,6 +37,11 @@ export default [
     {
       to: '/login',
       label: 'Login',
+      icon: 'lock'
+    },
+    {
+      to: '/register',
+      label: 'Register',
       icon: 'lock'
     },
     {
