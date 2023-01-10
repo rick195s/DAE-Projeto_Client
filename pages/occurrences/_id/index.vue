@@ -47,6 +47,20 @@
           icon="account"
           class="tile is-child"
         >
+          <b-field label="Select a repair shop">
+            <b-select
+              placeholder="Select a name"
+              :loading="repairShopsLoading"
+            >
+              <option
+                v-for="option in repairShops"
+                :key="option.id"
+                :value="option.id"
+              >
+                {{ option.name }}
+              </option>
+            </b-select>
+          </b-field>
           <b-field label="Description">
             <b-input
               :value="occurrence?.description ?? 'Description'"
@@ -144,7 +158,9 @@ export default defineComponent({
       defaultImg: '~/assets/img/file.png',
       iconStep0: 'account-question-outline',
       stepType: 'is-info',
-      loading: false
+      loading: false,
+      repairShops: [],
+      repairShopsLoading: true
     }
   },
   created () {
@@ -194,6 +210,23 @@ export default defineComponent({
           this.showError(error.message)
         })
     },
+    getRepairShops () {
+      this.repairShopsLoading = true
+      this.repairShops = []
+      this.$axios
+        .$get(`/api/insurers/${this.occurrence?.insurerId}/repair-shops`)
+        .then((response) => {
+          response.forEach((repairShop) => {
+            this.repairShops.push(repairShop)
+          })
+        })
+        .catch((error) => {
+          this.showError(error.message)
+        })
+        .finally(() => {
+          this.repairShopsLoading = false
+        })
+    },
     getOccurrenceFiles () {
       this.files = []
       this.$axios
@@ -218,6 +251,9 @@ export default defineComponent({
               this.stepIndex = 2
             }
           })
+        })
+        .then(() => {
+          this.getRepairShops()
         })
         .catch((error) => {
           this.showError(error.message)
