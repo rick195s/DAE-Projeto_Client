@@ -26,9 +26,16 @@
 export default {
   emits: ['approved', 'declined'],
   methods: {
+    showError (message) {
+      this.$buefy.snackbar.open({
+        message,
+        type: 'is-danger',
+        queue: false
+      })
+    },
     approveOccurrence () {
       this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/approved`)
+        .$patch(`/api/occurrences/${this.$route.params.id}/approved`)
         .then((response) => {
           this.$emit('approved')
         })
@@ -38,7 +45,7 @@ export default {
     },
     declineOccurrence () {
       this.$axios
-        .$put(`/api/occurrences/${this.$route.params.id}/declined`)
+        .$patch(`/api/occurrences/${this.$route.params.id}/declined`)
         .then((response) => {
           this.$emit('declined')
         })
