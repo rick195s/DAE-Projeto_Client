@@ -5,6 +5,7 @@
         native-type="submit"
         type="is-info"
         outlined
+        :loading="approveLoading"
         @click="approveOccurrence"
       >
         Approve
@@ -15,6 +16,7 @@
         type="is-info"
         native-type="button"
         outlined
+        :loading="declineLoading"
         @click="declineOccurrence"
       >
         Decline
@@ -25,6 +27,12 @@
 <script>
 export default {
   emits: ['approved', 'declined'],
+  data () {
+    return {
+      approveLoading: false,
+      declineLoading: false
+    }
+  },
   methods: {
     showError (message) {
       this.$buefy.snackbar.open({
@@ -34,6 +42,7 @@ export default {
       })
     },
     approveOccurrence () {
+      this.approveLoading = true
       this.$axios
         .$patch(`/api/occurrences/${this.$route.params.id}/approved`)
         .then((response) => {
@@ -42,8 +51,12 @@ export default {
         .catch((error) => {
           this.showError(error.message)
         })
+        .finally(() => {
+          this.approveLoading = false
+        })
     },
     declineOccurrence () {
+      this.declineLoading = true
       this.$axios
         .$patch(`/api/occurrences/${this.$route.params.id}/declined`)
         .then((response) => {
@@ -51,6 +64,9 @@ export default {
         })
         .catch((error) => {
           this.showError(error.message)
+        })
+        .finally(() => {
+          this.declineLoading = false
         })
     }
   }
