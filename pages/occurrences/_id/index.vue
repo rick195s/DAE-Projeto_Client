@@ -22,8 +22,14 @@
       Occurrence #{{ $route.params.id }}
       <action-buttons
         slot="right"
-        @approved="$refs.historySteps.approved()"
-        @declined="$refs.historySteps.declined()"
+        @approved="
+          $refs.historySteps.approved()
+          showRepairShops = true
+        "
+        @declined="
+          $refs.historySteps.declined()
+          showRepairShops = false
+        "
       />
     </hero-bar>
     <section class="section is-main-section">
@@ -121,6 +127,11 @@
                 value="john@"
                 maxlength="30"
               />
+              <b-input
+                v-model="form.phone"
+                placeholder="Phone"
+                maxlength="9"
+              />
             </b-field>
           </span>
           <file-upload ref="fileUploadComponent" />
@@ -177,7 +188,8 @@ export default defineComponent({
       selectedRepairShopId: null,
       form: {
         name: '',
-        email: ''
+        email: '',
+        phone: ''
       },
       historic: []
     }
@@ -190,6 +202,9 @@ export default defineComponent({
     submit () {
       this.uploadFiles()
       if (this.selectedRepairShopId) {
+        setTimeout((_) => {
+          this.loading = true
+        }, 1)
         this.$axios
           .$patch(
             `api/occurrences/${this.$route.params.id}/repair-shop/${this.selectedRepairShopId}`
@@ -198,14 +213,36 @@ export default defineComponent({
             this.showSnackbar('Success selecting repair shop', 'is-success')
           })
           .catch((error) => {
-            this.showSnackbar(error.message)
+            this.showSnackbar(error.response?.data.reason || error.message)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } else if (this.form.name && this.form.email && this.form.phone) {
+        setTimeout((_) => {
+          this.loading = true
+        }, 1)
+        this.$axios
+          .$post(
+            `api/occurrences/${this.$route.params.id}/repair-shop`,
+            this.form
+          )
+          .then((response) => {
+            this.showSnackbar('Success selecting repair shop', 'is-success')
+          })
+          .catch((error) => {
+            this.showSnackbar(error.response?.data.reason || error.message)
+          })
+          .finally(() => {
+            this.loading = false
           })
       }
     },
     resetForm () {
       this.form = {
         name: '',
-        email: ''
+        email: '',
+        phone: ''
       }
       this.selectedRepairShopId = null
       this.$refs.fileUploadComponent.resetFiles()
@@ -222,7 +259,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          this.showSnackbar(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
         .finally(() => {
           this.loading = false
@@ -248,7 +285,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showSnackbar(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
     },
     getRepairShops () {
@@ -262,7 +299,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showSnackbar(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
         .finally(() => {
           this.repairShopsLoading = false
@@ -278,7 +315,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showSnackbar(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
     },
     getOccurrenceDetails () {
@@ -296,7 +333,7 @@ export default defineComponent({
           this.getRepairShops()
         })
         .catch((error) => {
-          this.showSnackbar(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
     },
     showSnackbar (message, type) {
