@@ -2,7 +2,7 @@
   <div id="app">
     <nav-bar />
     <aside-menu :menu="menu" />
-    <nuxt></nuxt>
+    <nuxt />
     <footer-bar />
   </div>
 </template>
@@ -36,8 +36,6 @@ export default defineComponent({
       avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg'
     })
   },
-  created () {
-
-  }
+  created () {}
 })
 </script>

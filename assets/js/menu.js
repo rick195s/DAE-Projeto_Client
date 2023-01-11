@@ -17,14 +17,14 @@ export default [
       icon: 'account-circle'
     }
   ],
-  /*state.userRole == 'ADMINISTRATOR' ? 'Admin' : '',
+  /* state.userRole == 'ADMINISTRATOR' ? 'Admin' : '',
   state.getRole === 'ADMINISTRATOR' ? [
     {
       to: '/users',
       label: 'Users',
       icon: 'table'
     }
-  ] : '',*/
+  ] : '', */
   'Admin',
   [
     {
@@ -49,6 +49,6 @@ export default [
       to: '/occurrences',
       label: 'Occurrences',
       icon: 'format-list-checkbox'
-    },
+    }
   ]
 ]

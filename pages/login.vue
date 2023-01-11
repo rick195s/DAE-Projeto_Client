@@ -75,6 +75,7 @@ import CardComponent from '@/components/CardComponent.vue'
 export default defineComponent({
   name: 'LoginView',
   components: { CardComponent },
+  layout: 'guest',
   data () {
     return {
       isLoading: false,
