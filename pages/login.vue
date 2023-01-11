@@ -56,12 +56,12 @@
           </b-button>
         </div>
         <div class="control">
-          <router-link
-            to="/"
+          <nuxt-link
+            to="/register"
             class="button is-outlined is-black"
           >
-            Dashboard
-          </router-link>
+            Register
+          </nuxt-link>
         </div>
       </b-field>
     </form>
@@ -88,54 +88,41 @@ export default defineComponent({
     }
   },
   methods: {
-    submit () {
-      this.isLoading = true
-      setTimeout(() => {
-        this.isLoading = false
-        this.$router.push('/')
-      }, 750)
-    },
     loginClick () {
+      this.isLoading = true
       this.$axios
         .$post('/api/auth/login', {
           email: this.form.email,
           password: this.form.password
         })
         .then((tokenAux) => {
-          this.$buefy.snackbar.open({
-            message: 'Login successful',
-            type: 'is-success',
-            queue: true
-          })
-          console.log(tokenAux)
+          this.showSnackbar('Login successful', 'is-success')
+
           this.$store.commit('token', tokenAux)
           const config = {
             headers: { Authorization: `Bearer ${tokenAux}` }
           }
           this.$store.commit('user', this.form)
-          this.$axios
-            .get('/api/auth/user', config)
-            .then((user) => {
-              console.log(user.data)
-              this.$store.commit('user', user.data)
-
-              window.location.pathname = '/'
-            })
-            .catch((error) => {
-              this.$buefy.snackbar.open({
-                message: error.message,
-                type: 'is-danger',
-                queue: true
-              })
-            })
+          return this.$axios.get('/api/auth/user', config)
+        })
+        .then((user) => {
+          console.log(user.data)
+          this.$store.commit('user', user.data)
+          this.$router.push('/')
         })
         .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: true
-          })
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+    showSnackbar (message, type) {
+      this.$buefy.snackbar.open({
+        message,
+        type: type || 'is-danger',
+        queue: false
+      })
     }
   }
 })

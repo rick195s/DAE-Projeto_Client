@@ -1,98 +1,76 @@
 <template>
-  <div>
-    <hero-bar>
-      Register
-      <router-link
-        slot="right"
-        to="/"
-        class="button"
-      >
-        Dashboard
-      </router-link>
-    </hero-bar>
-    <section class="section is-main-section">
-      <card-component
-        title="Create an account"
-        icon="ballot"
-      >
-        <form @submit.prevent="create">
-          <b-field
-            label="Name"
-            horizontal
-          >
-            <b-input
-              v-model="form.name"
-              type="text"
-              maxlength="50"
-              placeholder="Manuel"
-              required
-            />
-          </b-field>
+  <card-component
+    title="Register"
+    icon="lock"
+  >
+    <form
+      method="POST"
+      @submit.prevent="create"
+    >
+      <b-field label="Name">
+        <b-input
+          v-model="form.name"
+          name="name"
+          placeholder="Manuel"
+          type="text"
+          required
+        />
+      </b-field>
+      <b-field label="E-mail Address">
+        <b-input
+          v-model="form.email"
+          name="email"
+          type="email"
+          placeholder="xyz@mail.pt"
+          required
+        />
+      </b-field>
 
-          <b-field
-            label="Email"
-            horizontal
-          >
-            <b-input
-              v-model="form.email"
-              type="email"
-              placeholder="xyz@mail.pt"
-              required
-            />
-          </b-field>
+      <b-field label="Password">
+        <b-input
+          v-model="form.password"
+          type="password"
+          name="password"
+          password-reveal
+          required
+        />
+      </b-field>
 
-          <b-field
-            label="Password"
-            horizontal
-          >
-            <b-input
-              v-model="form.password"
-              type="password"
-              password-reveal
-              required
-            />
-          </b-field>
+      <hr>
 
-          <hr>
-          <b-field horizontal>
-            <b-field grouped>
-              <div class="control">
-                <b-button
-                  native-type="submit"
-                  type="is-info"
-                  :loading="isLoading"
-                >
-                  Register
-                </b-button>
-              </div>
-              <div class="control">
-                <b-button
-                  type="is-info"
-                  native-type="button"
-                  outlined
-                  @click="reset"
-                >
-                  Reset
-                </b-button>
-              </div>
-            </b-field>
-          </b-field>
-        </form>
-      </card-component>
-    </section>
-  </div>
+      <b-field grouped>
+        <div class="control">
+          <b-button
+            native-type="submit"
+            type="is-black"
+            :loading="isLoading"
+          >
+            Register
+          </b-button>
+        </div>
+        <div class="control">
+          <router-link
+            to="/login"
+            class="button is-outlined is-black"
+          >
+            Login
+          </router-link>
+        </div>
+      </b-field>
+    </form>
+  </card-component>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import HeroBar from '@/components/HeroBar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
   components: {
-    HeroBar,
     CardComponent
   },
+  layout: 'guest',
+
   data () {
     return {
       form: {
@@ -105,7 +83,7 @@ export default defineComponent({
   },
   methods: {
     create () {
-      if (!this.verifyForm()){
+      if (!this.verifyForm()) {
         return
       }
 
@@ -115,11 +93,13 @@ export default defineComponent({
         this.$router.push('/users')
         this.isLoading = false
       })
-      // this.isLoading não vai atualizar
-      // this.isLoading = false
     },
     verifyForm () {
-      if (this.form.name === '' || this.form.email === '' || this.form.password === '') {
+      if (
+        this.form.name === '' ||
+        this.form.email === '' ||
+        this.form.password === ''
+      ) {
         this.$buefy.toast.open({
           message: 'Please fill all the fields',
           type: 'is-danger'
