@@ -126,7 +126,7 @@
           <file-upload ref="fileUploadComponent" />
           <form-buttons
             :loading="loading"
-            @submit="uploadFiles"
+            @submit="submit"
             @reset="resetForm"
           />
         </card-component>
@@ -187,6 +187,21 @@ export default defineComponent({
     this.getOccurrenceFiles()
   },
   methods: {
+    submit () {
+      this.uploadFiles()
+      if (this.selectedRepairShopId) {
+        this.$axios
+          .$patch(
+            `api/occurrences/${this.$route.params.id}/repair-shop/${this.selectedRepairShopId}`
+          )
+          .then((response) => {
+            this.showSnackbar('Success selecting repair shop', 'is-success')
+          })
+          .catch((error) => {
+            this.showSnackbar(error.message)
+          })
+      }
+    },
     resetForm () {
       this.form = {
         name: '',
@@ -199,12 +214,15 @@ export default defineComponent({
       this.loading = true
       this.$refs.fileUploadComponent
         .uploadFiles(this.$route.params.id)
-        .then(() => {
-          this.getOccurrenceFiles()
-          this.$refs.fileUploadComponent.resetFiles()
+        .then((filesUploaded) => {
+          if (filesUploaded !== 0) {
+            this.getOccurrenceFiles()
+            this.$refs.fileUploadComponent.resetFiles()
+            this.showSnackbar('Success uploading files', 'is-success')
+          }
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.message)
         })
         .finally(() => {
           this.loading = false
@@ -230,7 +248,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.message)
         })
     },
     getRepairShops () {
@@ -244,7 +262,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.message)
         })
         .finally(() => {
           this.repairShopsLoading = false
@@ -260,7 +278,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.message)
         })
     },
     getOccurrenceDetails () {
@@ -278,16 +296,17 @@ export default defineComponent({
           this.getRepairShops()
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.message)
         })
     },
-    showError (message) {
+    showSnackbar (message, type) {
       this.$buefy.snackbar.open({
         message,
-        type: 'is-danger',
+        type: type || 'is-danger',
         queue: false
       })
     },
+
     clickedFile (file) {
       if (!file.default) {
         this.activeFileModal(file)

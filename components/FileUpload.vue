@@ -69,7 +69,7 @@ export default {
     },
     uploadFiles (occurrenceId) {
       if (this.dropFiles.length === 0) {
-        return Promise.reject(new Error('No files to upload'))
+        return Promise.resolve(0)
       }
 
       const formData = new FormData()
