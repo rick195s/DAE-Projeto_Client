@@ -81,18 +81,45 @@ export default defineComponent({
   },
   methods: {
     submit () {
+      if (!this.validation()){
+        return;
+      }
+
       this.isLoading = true
+      this.$store.dispatch('auth/updatePassword', this.form)
+        .then(() => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: 'Password updated',
+            type: 'is-success'
+          })
+        })
+        .catch(() => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: 'Password update failed',
+            type: 'is-danger'
+          })
+        })
+    },
+    validation() {
+      if (this.form.password == null || this.form.password_confirmation == null || this.form.password_current == null) {
+        this.$buefy.toast.open({
+          message: 'Please fill all fields',
+          type: 'is-danger'
+        })
+        return false;
+      }
 
-      setTimeout(() => {
-        this.isLoading = false
+      if (this.form.password !== this.form.password_confirmation) {
+        this.$buefy.toast.open({
+          message: 'Passwords do not match',
+          type: 'is-danger'
+        })
+        return false;
+      }
 
-        this.$buefy.snackbar.open(
-          {
-            message: 'Demo only',
-            queue: false
-          }
-        )
-      }, 750)
+      return true;
     }
   }
 })

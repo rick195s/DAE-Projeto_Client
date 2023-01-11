@@ -117,7 +117,8 @@ export default defineComponent({
             .then((user) => {
               console.log(user.data)
               this.$store.commit('user', user.data)
-              this.$router.push('/')
+
+              window.location.pathname = '/'
             })
             .catch((error) => {
               this.$buefy.snackbar.open({

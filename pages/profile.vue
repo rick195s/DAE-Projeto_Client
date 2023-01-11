@@ -50,11 +50,9 @@ import HeroBar from '@/components/HeroBar.vue'
 import ProfileUpdateForm from '@/components/ProfileUpdateForm.vue'
 import PasswordUpdateForm from '@/components/PasswordUpdateForm.vue'
 import TilesBlock from '@/components/TilesBlock.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
 export default defineComponent({
   name: 'ProfileView',
   components: {
-    UserAvatar,
     TilesBlock,
     PasswordUpdateForm,
     ProfileUpdateForm,

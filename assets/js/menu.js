@@ -1,3 +1,5 @@
+import { state } from '../../store'
+
 export default [
   'General',
   [
@@ -7,7 +9,23 @@ export default [
       label: 'Dashboard'
     }
   ],
-  'Resources',
+  'Client',
+  [
+    {
+      to: '/profile',
+      label: 'Profile',
+      icon: 'account-circle'
+    }
+  ],
+  /*state.userRole == 'ADMINISTRATOR' ? 'Admin' : '',
+  state.getRole === 'ADMINISTRATOR' ? [
+    {
+      to: '/users',
+      label: 'Users',
+      icon: 'table'
+    }
+  ] : '',*/
+  'Admin',
   [
     {
       to: '/occurrences',
@@ -23,41 +41,14 @@ export default [
       to: '/users',
       label: 'Users',
       icon: 'table'
-    },
-    {
-      to: '/forms',
-      label: 'Forms',
-      icon: 'square-edit-outline'
-    },
-    {
-      to: '/profile',
-      label: 'Profile',
-      icon: 'account-circle'
-    },
-    {
-      to: '/login',
-      label: 'Login',
-      icon: 'lock'
-    },
-    {
-      to: '/register',
-      label: 'Register',
-      icon: 'lock'
-    },
-    {
-      label: 'Submenus',
-      subLabel: 'Submenus Example',
-      icon: 'view-list',
-      menu: [
-        {
-          href: '#void',
-          label: 'Sub-item One'
-        },
-        {
-          href: '#void',
-          label: 'Sub-item Two'
-        }
-      ]
     }
+  ],
+  'Expert',
+  [
+    {
+      to: '/occurrences',
+      label: 'Occurrences',
+      icon: 'format-list-checkbox'
+    },
   ]
 ]
