@@ -28,18 +28,6 @@
               required
             />
           </b-field>
-
-          <b-field
-            label="Email"
-            horizontal
-          >
-            <b-input
-              v-model="form.email"
-              type="email"
-              placeholder="xyz@mail.pt"
-              required
-            />
-          </b-field>
           <b-field
             horizontal
             label="Role"
