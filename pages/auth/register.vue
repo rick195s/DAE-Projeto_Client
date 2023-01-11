@@ -90,18 +90,17 @@ export default defineComponent({
       this.isLoading = true
       this.$axios
         .$post('/api/auth/register', this.form)
-        .then((tokenAux) => {
+        .then(() => {
           this.showSnackbar('Register successful', 'is-success')
 
-          this.$store.commit('token', tokenAux)
-          const config = {
-            headers: { Authorization: `Bearer ${tokenAux}` }
-          }
-          this.$store.commit('user', this.form)
-          return this.$axios.get('/api/auth/user', config)
+          return this.$auth.loginWith('local', {
+            data: {
+              email: this.form.email,
+              password: this.form.password
+            }
+          })
         })
-        .then((user) => {
-          this.$store.commit('user', user.data)
+        .then(() => {
           this.$router.push('/')
         })
         .catch((error) => {

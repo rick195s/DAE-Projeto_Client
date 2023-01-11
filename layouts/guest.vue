@@ -31,12 +31,6 @@ export default defineComponent({
   mounted () {
     this.$store.dispatch('toggleFullPage', true)
     this.$store.dispatch('asideDesktopOnlyToggle', false)
-
-    this.$store.commit('user', {
-      name: this.$store.state.userName,
-      email: this.$store.state.email,
-      avatar: 'https://avatars.dicebear.com/v2/gridy/John-Doe.svg'
-    })
   },
   created () {}
 })
