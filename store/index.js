@@ -6,10 +6,10 @@ Vue.use(Vuex)
 
 export const state = () => ({
   /* User */
-  userName: null,
+  userName: ' ',
   userEmail: null,
-  userAvatar: null,
   userRole: null,
+  token: null,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -40,21 +40,20 @@ export const mutations = {
     if (payload.email) {
       state.userEmail = payload.email
     }
-    if (payload.avatar) {
-      state.userAvatar = payload.avatar
-    }
     if (payload.role) {
       state.userRole = payload.role
     }
   },
 
-  token(state, payload) {
+  token (state, payload) {
     state.token = payload
   },
 
   logout (state) {
     state.userName = null
     state.userEmail = null
+    state.toekn = null
+    state.userRole = null
   },
 
   /* Aside Mobile */

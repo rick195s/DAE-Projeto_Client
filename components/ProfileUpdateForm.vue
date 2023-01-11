@@ -15,19 +15,6 @@
           required
         />
       </b-field>
-      <b-field
-        horizontal
-        label="E-mail"
-        message="Required. Your e-mail"
-      >
-        <b-input
-          v-model="userEmail"
-          name="email"
-          type="email"
-          required
-        />
-      </b-field>
-      <hr>
       <b-field horizontal>
         <b-field grouped>
           <div class="control">
