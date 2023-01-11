@@ -10,7 +10,7 @@
         message="Required. Your name"
       >
         <b-input
-          v-model="userName"
+          v-model="form.name"
           name="name"
           required
         />
@@ -24,15 +24,6 @@
               :loading="isLoading"
             >
               Submit
-            </b-button>
-          </div>
-          <div class="control">
-            <b-button
-              type="is-info"
-              native-type="button"
-              outlined
-            >
-              Reset
             </b-button>
           </div>
         </b-field>
@@ -52,6 +43,9 @@ export default defineComponent({
   },
   data () {
     return {
+      form: {
+        name: ''
+      },
       isLoading: false
     }
   },
@@ -75,16 +69,52 @@ export default defineComponent({
   },
   methods: {
     submit () {
+      if (!this.verifyForm()) {
+        return
+      }
       this.isLoading = true
+      let id = 0
+      const config = {
+        headers: { Authorization: `Bearer ${this.$store.state.token}` }
+      }
+      this.$axios.get('/api/auth/user', config)
+        .then((user) => {
+          console.log(user.data)
+          id = user.data.id
 
-      setTimeout(() => {
-        this.isLoading = false
-
-        this.$buefy.snackbar.open({
-          message: 'Demo only',
-          queue: false
+          console.log('is loading : ' + this.isLoading)
+          this.$axios.put('/api/users/'+ id, this.form).then(() => {
+            this.$store.commit('user', this.form)
+            this.$router.push('/profile')
+            this.isLoading = false
+          })
         })
-      }, 750)
+    },
+    verifyForm () {
+      if (this.form.name === '') {
+        this.$buefy.toast.open({
+          message: 'Please fill all the fields',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (this.form.name.length > 50) {
+        this.$buefy.toast.open({
+          message: 'Name must have less than 50 characters',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (/^[a-zA-Z .]+$/.test(this.form.name) === false) {
+        this.$buefy.toast.open({
+          message: 'Name must have only letters',
+          type: 'is-danger'
+        })
+        return false
+      }
+      return true
     }
   }
 })

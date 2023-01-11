@@ -82,10 +82,7 @@ export default defineComponent({
   data () {
     return {
       form: {
-        name: '',
-        email: '',
-        password: '',
-        role: ''
+        name: ''
       },
       isLoading: false
     }
@@ -117,6 +114,7 @@ export default defineComponent({
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
       this.$axios.put('/api/users/'+ this.$route.params.id, this.form).then(() => {
+        this.$store.commit('user', this.form)
         this.$router.push('/users')
         this.isLoading = false
       })
