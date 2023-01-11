@@ -111,7 +111,7 @@ export default defineComponent({
           this.$router.push('/')
         })
         .catch((error) => {
-          this.showSnackbar(error.response?.data.reason || error.message)
+          this.showSnackbar(error.response?.data.reason || 'Login Failed')
         })
         .finally(() => {
           this.isLoading = false

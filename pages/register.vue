@@ -88,10 +88,34 @@ export default defineComponent({
       }
 
       this.isLoading = true
-      console.log('is loading : ' + this.isLoading)
-      this.$axios.$post('/api/users/register', this.form).then(() => {
-        this.$router.push('/users')
-        this.isLoading = false
+      this.$axios
+        .$post('/api/auth/register', this.form)
+        .then((tokenAux) => {
+          this.showSnackbar('Register successful', 'is-success')
+
+          this.$store.commit('token', tokenAux)
+          const config = {
+            headers: { Authorization: `Bearer ${tokenAux}` }
+          }
+          this.$store.commit('user', this.form)
+          return this.$axios.get('/api/auth/user', config)
+        })
+        .then((user) => {
+          this.$store.commit('user', user.data)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.showSnackbar(error.response.data.message, 'is-danger')
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+    showSnackbar (message, type) {
+      this.$buefy.snackbar.open({
+        message,
+        type: type || 'is-danger',
+        queue: false
       })
     },
     verifyForm () {
@@ -115,7 +139,7 @@ export default defineComponent({
         return false
       }
 
-      if (/^[a-zA-Z]+$/.test(this.form.name) === false) {
+      if (/^[a-z A-Z]+$/.test(this.form.name) === false) {
         this.$buefy.toast.open({
           message: 'Name must have only letters',
           type: 'is-danger'
