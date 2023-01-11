@@ -17,7 +17,9 @@
       >
         <b-icon icon="menu" />
       </a>
-      <div class="navbar-item has-control no-left-space-touch no-left-space-desktop-only">
+      <div
+        class="navbar-item has-control no-left-space-touch no-left-space-desktop-only"
+      >
         <div class="control">
           <input
             class="input"
@@ -42,24 +44,10 @@
       :class="{ 'is-active': isMenuActive }"
     >
       <div class="navbar-end">
-        <div v-if="!userName" class="has-divider">
-          <!--button with route-->
-          <router-link
-            slot="right"
-            to="/login"
-            class="button">
-
-            Login
-          </router-link>
-          <router-link
-            slot="right"
-            to="/register"
-            class="button">
-
-            Register
-          </router-link>
-        </div>
-        <nav-bar-menu v-if="userName" class="has-divider has-user-avatar">
+        <nav-bar-menu
+          v-if="userName"
+          class="has-divider has-user-avatar"
+        >
           <user-avatar />
           <div class="is-user-name">
             <span>{{ userName }}</span>
@@ -83,10 +71,10 @@
           </div>
         </nav-bar-menu>
         <a
+          v-show="userName"
           class="navbar-item is-desktop-icon-only"
           title="Log out"
           @click="logout"
-          v-show="userName"
         >
           <b-icon
             icon="logout"
@@ -123,11 +111,7 @@ export default defineComponent({
     menuToggleIcon () {
       return this.isMenuActive ? 'close' : 'dots-vertical'
     },
-    ...mapState([
-      'isAsideMobileExpanded',
-      'isNavBarVisible',
-      'userName'
-    ])
+    ...mapState(['isAsideMobileExpanded', 'isNavBarVisible', 'userName'])
   },
   mounted () {
     this.$router.afterEach(() => {
@@ -146,6 +130,7 @@ export default defineComponent({
     },
     logout () {
       this.$store.commit('logout')
+      this.$router.push('/auth/login')
       this.$buefy.snackbar.open({
         message: 'Log out clicked',
         queue: false

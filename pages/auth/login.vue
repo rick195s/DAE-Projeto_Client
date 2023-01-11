@@ -57,7 +57,7 @@
         </div>
         <div class="control">
           <nuxt-link
-            to="/register"
+            to="/auth/register"
             class="button is-outlined is-black"
           >
             Register
@@ -74,6 +74,7 @@ import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
   name: 'LoginView',
+  auth: false,
   components: { CardComponent },
   layout: 'guest',
   data () {
@@ -90,6 +91,14 @@ export default defineComponent({
   methods: {
     loginClick () {
       this.isLoading = true
+
+      this.$auth.loginWith('local', {
+        data: {
+          email: this.form.email,
+          password: this.form.password
+        }
+      })
+
       this.$axios
         .$post('/api/auth/login', {
           email: this.form.email,

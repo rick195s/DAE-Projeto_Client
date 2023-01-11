@@ -50,7 +50,7 @@
         </div>
         <div class="control">
           <router-link
-            to="/login"
+            to="/auth/login"
             class="button is-outlined is-black"
           >
             Login
@@ -70,7 +70,7 @@ export default defineComponent({
     CardComponent
   },
   layout: 'guest',
-
+  auth: false,
   data () {
     return {
       form: {
