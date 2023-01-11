@@ -1,5 +1,9 @@
 <template>
   <div>
+    <b-loading
+      v-model="isPageLoading"
+      is-full-page
+    />
     <b-modal
       v-model="isFileCardModalActive"
       :width="640"
@@ -22,45 +26,23 @@
       Occurrence #{{ $route.params.id }}
       <action-buttons
         slot="right"
-        @approved="stepIndex = 2"
-        @declined="declined"
+        @approved="
+          $refs.historySteps.approved()
+          showRepairShops = true
+        "
+        @declined="
+          $refs.historySteps.declined()
+          showRepairShops = false
+        "
       />
     </hero-bar>
     <section class="section is-main-section">
-      <tiles-block>
-        <card-component
-          title="Photos of repaired object"
-          icon="account"
-          class="tile is-child"
-        >
-          <file-upload ref="fileUploadComponent" />
-          <form-buttons
-            :loading="loading"
-            @submit="uploadFiles"
-            @reset="$refs.fileUploadComponent.resetFiles()"
-          />
-        </card-component>
-      </tiles-block>
       <tiles-block>
         <card-component
           title="Details"
           icon="account"
           class="tile is-child"
         >
-          <b-field label="Select a repair shop">
-            <b-select
-              placeholder="Select a name"
-              :loading="repairShopsLoading"
-            >
-              <option
-                v-for="option in repairShops"
-                :key="option.id"
-                :value="option.id"
-              >
-                {{ option.name }}
-              </option>
-            </b-select>
-          </b-field>
           <b-field label="Description">
             <b-input
               :value="occurrence?.description ?? 'Description'"
@@ -91,20 +73,10 @@
           icon="account"
           class="tile is-child"
         >
-          <b-steps
-            v-model="stepIndex"
-            :type="stepType"
-            :has-navigation="false"
-          >
-            <b-step-item :icon="iconStep0">
-              Waiting Approval From Insurance
-            </b-step-item>
-            <b-step-item icon="check" />
-            <b-step-item icon="account-question-outline">
-              Waiting Repair From Repair Expert
-            </b-step-item>
-            <b-step-item icon="check-all" />
-          </b-steps>
+          <history-steps
+            ref="historySteps"
+            :historic="historic"
+          />
           <hr>
           <empty-section v-if="files.length == 0" />
           <span v-else>
@@ -116,6 +88,62 @@
               @clicked-file="clickedFile(file)"
             />
           </span>
+        </card-component>
+      </tiles-block>
+      <tiles-block>
+        <card-component
+          title="Photos of repaired object"
+          icon="account"
+          class="tile is-child"
+        >
+          <span v-if="showRepairShops">
+            <b-field
+              horizontal
+              label="Select a repair shop"
+            >
+              <b-select
+                v-model="selectedRepairShopId"
+                placeholder="Select a name"
+                :loading="repairShopsLoading"
+              >
+                <option
+                  v-for="option in repairShops"
+                  :key="option.id"
+                  :value="option.id"
+                >
+                  {{ option.name }}
+                </option>
+              </b-select>
+            </b-field>
+            <b-field
+              label="or specify a new one"
+              horizontal
+            >
+              <b-input
+                v-model="form.name"
+                placeholder="Name"
+                maxlength="30"
+              />
+              <b-input
+                v-model="form.email"
+                placeholder="Email"
+                type="email"
+                value="john@"
+                maxlength="30"
+              />
+              <b-input
+                v-model="form.phone"
+                placeholder="Phone"
+                maxlength="9"
+              />
+            </b-field>
+          </span>
+          <file-upload ref="fileUploadComponent" />
+          <form-buttons
+            :loading="loading"
+            @submit="submit"
+            @reset="resetForm"
+          />
         </card-component>
       </tiles-block>
     </section>
@@ -133,6 +161,7 @@ import FileCard from '@/components/FileCard.vue'
 import FileUpload from '@/components/FileUpload.vue'
 import FormButtons from '@/components/FormButtons.vue'
 import ActionButtons from '@/components/occurrences/ActionButtons.vue'
+import HistorySteps from '@/components/occurrences/HistorySteps.vue'
 
 export default defineComponent({
   name: 'FormsView',
@@ -145,7 +174,8 @@ export default defineComponent({
     FileCard,
     FileUpload,
     ActionButtons,
-    FormButtons
+    FormButtons,
+    HistorySteps
   },
   data () {
     return {
@@ -154,13 +184,19 @@ export default defineComponent({
       isFileCardModalActive: false,
       selectedFile: null,
       occurrence: null,
-      stepIndex: 0,
       defaultImg: '~/assets/img/file.png',
-      iconStep0: 'account-question-outline',
-      stepType: 'is-info',
       loading: false,
+      isPageLoading: true,
       repairShops: [],
-      repairShopsLoading: true
+      repairShopsLoading: true,
+      showRepairShops: false,
+      selectedRepairShopId: null,
+      form: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      historic: []
     }
   },
   created () {
@@ -168,26 +204,73 @@ export default defineComponent({
     this.getOccurrenceFiles()
   },
   methods: {
+    submit () {
+      this.uploadFiles()
+      if (this.selectedRepairShopId) {
+        setTimeout((_) => {
+          this.loading = true
+        }, 1)
+        this.$axios
+          .$patch(
+            `api/occurrences/${this.$route.params.id}/repair-shop/${this.selectedRepairShopId}`
+          )
+          .then((response) => {
+            this.showSnackbar('Success selecting repair shop', 'is-success')
+          })
+          .catch((error) => {
+            this.showSnackbar(error.response?.data.reason || error.message)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } else if (this.form.name && this.form.email && this.form.phone) {
+        setTimeout((_) => {
+          this.loading = true
+        }, 1)
+        this.$axios
+          .$post(
+            `api/occurrences/${this.$route.params.id}/repair-shop`,
+            this.form
+          )
+          .then((response) => {
+            this.showSnackbar('Success selecting repair shop', 'is-success')
+          })
+          .catch((error) => {
+            this.showSnackbar(error.response?.data.reason || error.message)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
+    },
+    resetForm () {
+      this.form = {
+        name: '',
+        email: '',
+        phone: ''
+      }
+      this.selectedRepairShopId = null
+      this.$refs.fileUploadComponent.resetFiles()
+    },
     uploadFiles () {
       this.loading = true
       this.$refs.fileUploadComponent
         .uploadFiles(this.$route.params.id)
-        .then(() => {
-          this.getOccurrenceFiles()
-          this.$refs.fileUploadComponent.resetFiles()
+        .then((filesUploaded) => {
+          if (filesUploaded !== 0) {
+            this.getOccurrenceFiles()
+            this.$refs.fileUploadComponent.resetFiles()
+            this.showSnackbar('Success uploading files', 'is-success')
+          }
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
         .finally(() => {
           this.loading = false
         })
     },
-    declined () {
-      this.stepIndex = 0
-      this.stepType = 'is-danger'
-      this.iconStep0 = 'close-circle-outline'
-    },
+
     onImgError (file) {
       file.default = true
     },
@@ -207,7 +290,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
     },
     getRepairShops () {
@@ -221,7 +304,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
         .finally(() => {
           this.repairShopsLoading = false
@@ -237,7 +320,7 @@ export default defineComponent({
           })
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
         })
     },
     getOccurrenceDetails () {
@@ -245,27 +328,30 @@ export default defineComponent({
         .$get(`/api/occurrences/${this.$route.params.id}`)
         .then((response) => {
           console.log(response)
+          if (response.approvalType === 'APPROVED') {
+            this.showRepairShops = true
+          }
           this.occurrence = response
-          response.historic.forEach((historic) => {
-            if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
-              this.stepIndex = 2
-            }
-          })
+          this.historic = response.historic
         })
         .then(() => {
           this.getRepairShops()
         })
         .catch((error) => {
-          this.showError(error.message)
+          this.showSnackbar(error.response?.data.reason || error.message)
+        })
+        .finally(() => {
+          this.isPageLoading = false
         })
     },
-    showError (message) {
+    showSnackbar (message, type) {
       this.$buefy.snackbar.open({
         message,
-        type: 'is-danger',
+        type: type || 'is-danger',
         queue: false
       })
     },
+
     clickedFile (file) {
       if (!file.default) {
         this.activeFileModal(file)

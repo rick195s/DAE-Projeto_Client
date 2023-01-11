@@ -72,7 +72,6 @@
 import { defineComponent } from 'vue'
 import CardComponent from '@/components/CardComponent.vue'
 
-
 export default defineComponent({
   name: 'LoginView',
   components: { CardComponent },
@@ -123,11 +122,13 @@ export default defineComponent({
             headers: { Authorization: `Bearer ${tokenAux}` }
           }
           this.$store.commit('user', this.form)
-          this.$axios.get('/api/auth/user', config)
+          this.$axios
+            .get('/api/auth/user', config)
             .then((user) => {
               console.log(user.data)
               this.$store.commit('user', user.data)
-              this.$router.push('/')
+
+              window.location.pathname = '/'
             })
             .catch((error) => {
               this.$buefy.snackbar.open({

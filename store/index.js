@@ -56,6 +56,7 @@ export const mutations = {
     state.toekn = null
     state.userRole = null
     state.rememberMe = false
+    window.location.reload(true)
   },
 
   /* Aside Mobile */
