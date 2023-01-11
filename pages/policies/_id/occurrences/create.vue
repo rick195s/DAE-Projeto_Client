@@ -36,7 +36,6 @@
 
           <form-buttons
             :loading="loading"
-            @submit="$refs.fileUploadComponent.uploadFiles($route.params.id)"
             @reset="formReset"
           />
         </form>
@@ -81,13 +80,13 @@ export default defineComponent({
       this.$axios
         .$post('/api/occurrences', {
           policyId: this.$route.params.id,
-          repairShopId: 1,
           clientId: 1,
           description: this.form.description
         })
-        .then((response) =>
+        .then((response) => {
+          console.log('occurrencia criada: ', response)
           this.$refs.fileUploadComponent.uploadFiles(response.id)
-        )
+        })
         .then(() => {
           this.$router.push('/')
         })
