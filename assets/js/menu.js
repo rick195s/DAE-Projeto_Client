@@ -1,5 +1,3 @@
-import { state } from '../../store'
-
 export default [
   'General',
   [
@@ -17,14 +15,7 @@ export default [
       icon: 'account-circle'
     }
   ],
-  /* state.userRole == 'ADMINISTRATOR' ? 'Admin' : '',
-  state.getRole === 'ADMINISTRATOR' ? [
-    {
-      to: '/users',
-      label: 'Users',
-      icon: 'table'
-    }
-  ] : '', */
+
   'Admin',
   [
     {

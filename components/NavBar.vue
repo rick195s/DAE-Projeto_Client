@@ -47,7 +47,7 @@
         <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
-            <span>{{ $auth.user.name }}</span>
+            <span>{{ $auth.user?.name }}</span>
           </div>
 
           <div

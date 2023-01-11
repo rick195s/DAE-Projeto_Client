@@ -51,24 +51,6 @@ export default defineComponent({
   computed: {
     ...mapState(['isAsideVisible'])
   },
-  mounted () {
-    if (this.$store.state.userRole === null) {
-      this.menu.splice(2, 8)
-    }
-    if (this.$store.state.userRole === 'ADMINISTRATOR') {
-      this.menu.splice(6, 2)
-    }
-    if (this.$store.state.userRole === 'CLIENT') {
-      this.menu.splice(4, 4)
-    }
-    if (
-      this.$store.state.userRole === 'INSURER_EXPERT' ||
-      this.$store.state.userRole === 'REPAIR_SHOP_EXPERT'
-    ) {
-      this.menu.splice(0, 2)
-      this.menu.splice(2, 2)
-    }
-  },
   methods: {
     asideToggleDesktopOnly () {
       this.$store.dispatch('asideDesktopOnlyToggle')

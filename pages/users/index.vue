@@ -50,6 +50,7 @@ export default defineComponent({
     UsersTable,
     NotificationBar
   },
+  middleware: 'admin',
   data () {
     return {
       titleStack: ['Admin', 'All Users'],
