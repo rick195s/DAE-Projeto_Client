@@ -3,13 +3,13 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Profile
-      <router-link
+      <nuxt-link
         slot="right"
         to="/"
         class="button"
       >
         Dashboard
-      </router-link>
+      </nuxt-link>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -21,7 +21,7 @@
         >
           <b-field label="Name">
             <b-input
-              :value="userName"
+              :value="$auth.user.name"
               custom-class="is-static"
               readonly
             />
@@ -29,7 +29,7 @@
           <hr>
           <b-field label="E-mail">
             <b-input
-              :value="userEmail"
+              :value="$auth.user.email"
               custom-class="is-static"
               readonly
             />
@@ -43,7 +43,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
@@ -64,12 +63,6 @@ export default defineComponent({
     return {
       titleStack: ['Admin', 'Profile']
     }
-  },
-  computed: {
-    ...mapState([
-      'userName',
-      'userEmail'
-    ])
   }
 })
 </script>

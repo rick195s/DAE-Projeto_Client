@@ -44,13 +44,10 @@
       :class="{ 'is-active': isMenuActive }"
     >
       <div class="navbar-end">
-        <nav-bar-menu
-          v-if="userName"
-          class="has-divider has-user-avatar"
-        >
+        <nav-bar-menu class="has-divider has-user-avatar">
           <user-avatar />
           <div class="is-user-name">
-            <span>{{ userName }}</span>
+            <span>{{ $auth.user.name }}</span>
           </div>
 
           <div
@@ -71,7 +68,7 @@
           </div>
         </nav-bar-menu>
         <a
-          v-show="userName"
+          v-if="$auth.loggedIn"
           class="navbar-item is-desktop-icon-only"
           title="Log out"
           @click="logout"
@@ -111,7 +108,7 @@ export default defineComponent({
     menuToggleIcon () {
       return this.isMenuActive ? 'close' : 'dots-vertical'
     },
-    ...mapState(['isAsideMobileExpanded', 'isNavBarVisible', 'userName'])
+    ...mapState(['isAsideMobileExpanded', 'isNavBarVisible'])
   },
   mounted () {
     this.$router.afterEach(() => {
@@ -129,12 +126,8 @@ export default defineComponent({
       this.isMenuActive = !this.isMenuActive
     },
     logout () {
-      this.$store.commit('logout')
+      this.$auth.logout()
       this.$router.push('/auth/login')
-      this.$buefy.snackbar.open({
-        message: 'Log out clicked',
-        queue: false
-      })
     }
   }
 })

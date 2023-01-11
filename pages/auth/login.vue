@@ -92,31 +92,15 @@ export default defineComponent({
     loginClick () {
       this.isLoading = true
 
-      this.$auth.loginWith('local', {
-        data: {
-          email: this.form.email,
-          password: this.form.password
-        }
-      })
-
-      this.$axios
-        .$post('/api/auth/login', {
-          email: this.form.email,
-          password: this.form.password
-        })
-        .then((tokenAux) => {
-          this.showSnackbar('Login successful', 'is-success')
-
-          this.$store.commit('token', tokenAux)
-          const config = {
-            headers: { Authorization: `Bearer ${tokenAux}` }
+      this.$auth
+        .loginWith('local', {
+          data: {
+            email: this.form.email,
+            password: this.form.password
           }
-          this.$store.commit('user', this.form)
-          return this.$axios.get('/api/auth/user', config)
         })
-        .then((user) => {
-          console.log(user.data)
-          this.$store.commit('user', user.data)
+        .then(() => {
+          this.showSnackbar('Login successful', 'is-success')
           this.$router.push('/')
         })
         .catch((error) => {
