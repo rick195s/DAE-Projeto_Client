@@ -8,6 +8,7 @@
       type="is-info"
       multiple
       drag-drop
+      @input="checkFiles"
     >
       <section class="section">
         <div class="content has-text-centered">
@@ -54,6 +55,17 @@ export default {
     },
     resetFiles () {
       this.dropFiles = []
+    },
+    checkFiles (files) {
+      files.forEach((file) => {
+        if (file.size > 100000) {
+          this.$buefy.snackbar.open({
+            message: 'File size needs to be less than 100kb',
+            type: 'is-danger'
+          })
+          this.dropFiles.splice(this.dropFiles.indexOf(file), 1)
+        }
+      })
     },
     uploadFiles (occurrenceId) {
       if (this.dropFiles.length === 0) {
