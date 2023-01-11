@@ -1,5 +1,9 @@
 <template>
   <div>
+    <b-loading
+      v-model="isPageLoading"
+      is-full-page
+    />
     <b-modal
       v-model="isFileCardModalActive"
       :width="640"
@@ -182,6 +186,7 @@ export default defineComponent({
       occurrence: null,
       defaultImg: '~/assets/img/file.png',
       loading: false,
+      isPageLoading: true,
       repairShops: [],
       repairShopsLoading: true,
       showRepairShops: false,
@@ -334,6 +339,9 @@ export default defineComponent({
         })
         .catch((error) => {
           this.showSnackbar(error.response?.data.reason || error.message)
+        })
+        .finally(() => {
+          this.isPageLoading = false
         })
     },
     showSnackbar (message, type) {
