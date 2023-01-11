@@ -10,6 +10,7 @@ export const state = () => ({
   userEmail: null,
   userRole: null,
   token: null,
+  rememberMe: false,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -19,10 +20,7 @@ export const state = () => ({
 
   /* Aside */
   isAsideVisible: true,
-  isAsideMobileExpanded: false,
-
-  /* Sample data (commonly used) */
-  clients: []
+  isAsideMobileExpanded: false
 
 })
 
@@ -45,6 +43,9 @@ export const mutations = {
     }
   },
 
+  rememberMe (state, payload) {
+    state.rememberMe = payload
+  },
   token (state, payload) {
     state.token = payload
   },
@@ -54,6 +55,7 @@ export const mutations = {
     state.userEmail = null
     state.toekn = null
     state.userRole = null
+    state.rememberMe = false
   },
 
   /* Aside Mobile */
