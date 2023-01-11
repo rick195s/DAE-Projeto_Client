@@ -31,6 +31,9 @@ export const mutations = {
   basic (state, payload) {
     state[payload.key] = payload.value
   },
+  getRole(){
+    return this.$store.state.userRole;
+  },
 
   /* User */
   user (state, payload) {
@@ -54,6 +57,7 @@ export const mutations = {
     state.userEmail = null
     state.toekn = null
     state.userRole = null
+    window.location.reload(true)
   },
 
   /* Aside Mobile */
