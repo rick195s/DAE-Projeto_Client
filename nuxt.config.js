@@ -40,10 +40,45 @@ export default {
     // 'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-
-    'nuxt-buefy',
+    '@nuxtjs/auth',
+    'nuxt-buefy'
 
   ],
+
+  // Auth module configuration: https://auth.nuxtjs.org/
+  auth: {
+    redirect: {
+      login: '/auth/login',
+      logout: '/',
+      home: '/'
+    },
+    watchLoggedIn: true,
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/auth/login',
+            method: 'post',
+            propertyName: null
+          },
+          logout: false,
+          user: {
+            url: '/api/auth/user',
+            method: 'get',
+            propertyName: null
+          }
+        }
+        // tokenRequired: true, -> default
+        // tokenType: 'bearer' -> default
+      }
+    }
+  },
+
+  router: {
+    middleware: [
+      'auth'
+    ]
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {

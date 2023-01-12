@@ -10,7 +10,7 @@
         message="Required. Your name"
       >
         <b-input
-          v-model="userName"
+          v-model="form.name"
           name="name"
           required
         />
@@ -24,15 +24,6 @@
               :loading="isLoading"
             >
               Submit
-            </b-button>
-          </div>
-          <div class="control">
-            <b-button
-              type="is-info"
-              native-type="button"
-              outlined
-            >
-              Reset
             </b-button>
           </div>
         </b-field>
@@ -52,7 +43,11 @@ export default defineComponent({
   },
   data () {
     return {
-      isLoading: false
+      form: {
+        name: ''
+      },
+      isLoading: false,
+      id: 0
     }
   },
   computed: {
@@ -73,18 +68,70 @@ export default defineComponent({
       }
     }
   },
+  created () {
+    this.id = 0
+    const config = {
+      headers: { Authorization: `Bearer ${this.$store.state.token}` }
+    }
+    this.$axios.get('/api/auth/user', config)
+      .then((user) => {
+        this.id = user.data.id
+        this.loading = true
+        this.$axios
+          .$get('/api/users/' + this.id)
+          .then((user) => {
+            this.form = user
+          })
+          .catch((error) => {
+            this.$buefy.snackbar.open({
+              message: error.message,
+              type: 'is-danger',
+              queue: true
+            })
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      })
+  },
   methods: {
     submit () {
+      if (!this.verifyForm()) {
+        return
+      }
       this.isLoading = true
-
-      setTimeout(() => {
+      console.log('is loading : ' + this.isLoading)
+      this.$axios.put('/api/users/'+ this.id , this.form).then(() => {
+        this.$store.commit('user', this.form)
+        this.$router.push('/profile')
         this.isLoading = false
-
-        this.$buefy.snackbar.open({
-          message: 'Demo only',
-          queue: false
+      })
+    },
+    verifyForm () {
+      if (this.form.name === '') {
+        this.$buefy.toast.open({
+          message: 'Please fill all the fields',
+          type: 'is-danger'
         })
-      }, 750)
+        return false
+      }
+
+      if (this.form.name.length > 50) {
+        this.$buefy.toast.open({
+          message: 'Name must have less than 50 characters',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (/^[a-zA-Z .]+$/.test(this.form.name) === false) {
+        this.$buefy.toast.open({
+          message: 'Name must have only letters',
+          type: 'is-danger'
+        })
+        return false
+      }
+      return true
     }
   }
 })

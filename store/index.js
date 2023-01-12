@@ -5,11 +5,6 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 export const state = () => ({
-  /* User */
-  userName: ' ',
-  userEmail: null,
-  userRole: null,
-  token: null,
 
   /* NavBar */
   isNavBarVisible: true,
@@ -19,10 +14,7 @@ export const state = () => ({
 
   /* Aside */
   isAsideVisible: true,
-  isAsideMobileExpanded: false,
-
-  /* Sample data (commonly used) */
-  clients: []
+  isAsideMobileExpanded: false
 
 })
 
@@ -31,33 +23,8 @@ export const mutations = {
   basic (state, payload) {
     state[payload.key] = payload.value
   },
-  getRole(){
-    return this.$store.state.userRole;
-  },
-
-  /* User */
-  user (state, payload) {
-    if (payload.name) {
-      state.userName = payload.name
-    }
-    if (payload.email) {
-      state.userEmail = payload.email
-    }
-    if (payload.role) {
-      state.userRole = payload.role
-    }
-  },
-
-  token (state, payload) {
-    state.token = payload
-  },
-
-  logout (state) {
-    state.userName = null
-    state.userEmail = null
-    state.toekn = null
-    state.userRole = null
-    window.location.reload(true)
+  getRole () {
+    return this.$store.state.userRole
   },
 
   /* Aside Mobile */

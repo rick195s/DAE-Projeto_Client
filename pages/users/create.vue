@@ -56,10 +56,19 @@
             horizontal
             label="Role"
           >
-            <b-select v-model="form.role" placeholder="Select a role">
-              <option value="CLIENT">Client</option>
-              <option value="INSURER_EXPERT">Insurer Expert</option>
-              <option value="REPAIR_SHOP_EXPERT">Repair Shop Expert</option>
+            <b-select
+              v-model="form.role"
+              placeholder="Select a role"
+            >
+              <option value="CLIENT">
+                Client
+              </option>
+              <option value="INSURER_EXPERT">
+                Insurer Expert
+              </option>
+              <option value="REPAIR_SHOP_EXPERT">
+                Repair Shop Expert
+              </option>
             </b-select>
           </b-field>
 
@@ -103,6 +112,7 @@ export default defineComponent({
     HeroBar,
     CardComponent
   },
+  middleware: 'admin',
   data () {
     return {
       form: {
@@ -116,7 +126,7 @@ export default defineComponent({
   },
   methods: {
     create () {
-      if (!this.verifyForm()){
+      if (!this.verifyForm()) {
         return
       }
 
@@ -130,7 +140,12 @@ export default defineComponent({
       // this.isLoading = false
     },
     verifyForm () {
-      if (this.form.name === '' || this.form.email === '' || this.form.password === '' || this.form.role === '') {
+      if (
+        this.form.name === '' ||
+        this.form.email === '' ||
+        this.form.password === '' ||
+        this.form.role === ''
+      ) {
         this.$buefy.toast.open({
           message: 'Please fill all the fields',
           type: 'is-danger'
