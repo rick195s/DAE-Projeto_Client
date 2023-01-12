@@ -86,12 +86,17 @@ export default defineComponent({
       }
 
       this.loading = true
+
+      const config = {
+        headers: { Authorization: this.$auth.getToken('local') }
+      }
+
       this.$axios
         .$put('/api/auth/updatePassword', {
           oldPassword: this.form.password_current,
           newPassword: this.form.password,
           confirmNewPassword: this.form.password_confirmation
-        })
+        }, config)
         .then(() => {
           this.$buefy.toast.open({
             message: 'Password updated successfully',
@@ -119,7 +124,7 @@ export default defineComponent({
         return false;
       }
 
-      if (this.form.newPassword.length < 8) {
+      if (this.form.password.length < 8) {
         this.$buefy.toast.open({
           message: 'Password must be at least 8 characters',
           type: 'is-danger'
