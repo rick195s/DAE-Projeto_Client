@@ -13,8 +13,7 @@
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
-        <profile-update-form class="tile is-child" />
-        <card-component
+        <profile-update-form class="tile is-child" /><card-component
           title="Profile"
           icon="account"
           class="tile is-child"
