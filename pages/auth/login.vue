@@ -56,12 +56,12 @@
           </b-button>
         </div>
         <div class="control">
-          <router-link
-            to="/"
+          <nuxt-link
+            to="/auth/register"
             class="button is-outlined is-black"
           >
-            Dashboard
-          </router-link>
+            Register
+          </nuxt-link>
         </div>
       </b-field>
     </form>
@@ -74,7 +74,9 @@ import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
   name: 'LoginView',
+  auth: false,
   components: { CardComponent },
+  layout: 'guest',
   data () {
     return {
       isLoading: false,
@@ -87,64 +89,38 @@ export default defineComponent({
     }
   },
   created () {
-    console.log(this.$store.state.rememberMe)
     if (this.$store.state.rememberMe) {
       this.$router.push('/')
-    } else {
-      this.$store.commit('logout')
     }
   },
   methods: {
-    submit () {
-      this.isLoading = true
-      setTimeout(() => {
-        this.isLoading = false
-        this.$router.push('/')
-      }, 750)
-    },
     loginClick () {
-      console.log(this.form.remember)
-      this.$axios
-        .$post('/api/auth/login', {
-          email: this.form.email,
-          password: this.form.password
-        })
-        .then((tokenAux) => {
-          this.$buefy.snackbar.open({
-            message: 'Login successful',
-            type: 'is-success',
-            queue: true
-          })
-          console.log(tokenAux)
-          this.$store.commit('token', tokenAux)
-          this.$store.commit('rememberMe', this.form.remember)
-          const config = {
-            headers: { Authorization: `Bearer ${tokenAux}` }
-          }
-          this.$store.commit('user', this.form)
-          this.$axios
-            .get('/api/auth/user', config)
-            .then((user) => {
-              console.log(user.data)
-              this.$store.commit('user', user.data)
+      this.isLoading = true
 
-              window.location.pathname = '/'
-            })
-            .catch((error) => {
-              this.$buefy.snackbar.open({
-                message: error.message,
-                type: 'is-danger',
-                queue: true
-              })
-            })
+      this.$auth
+        .loginWith('local', {
+          data: {
+            email: this.form.email,
+            password: this.form.password
+          }
+        })
+        .then(() => {
+          this.showSnackbar('Login successful', 'is-success')
+          this.$router.push('/')
         })
         .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: true
-          })
+          this.showSnackbar(error.response?.data.reason || 'Login Failed')
         })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+    showSnackbar (message, type) {
+      this.$buefy.snackbar.open({
+        message,
+        type: type || 'is-danger',
+        queue: false
+      })
     }
   }
 })

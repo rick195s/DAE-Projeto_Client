@@ -88,6 +88,7 @@ export default defineComponent({
     HeroBar,
     CardComponent
   },
+  middleware: 'admin',
   data () {
     return {
       form: {
@@ -122,14 +123,14 @@ export default defineComponent({
 
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
-
       this.$axios
         .put('/api/users/' + this.$route.params.id, this.form)
         .then(() => {
           this.$router.push('/users')
           this.isLoading = false
         })
-
+      // this.isLoading não vai atualizar
+      // this.isLoading = false
     },
     verifyForm () {
       if (

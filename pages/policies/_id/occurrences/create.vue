@@ -80,7 +80,7 @@ export default defineComponent({
       this.$axios
         .$post('/api/occurrences', {
           policyId: this.$route.params.id,
-          clientId: 1,
+          clientId: this.$auth.user.id,
           description: this.form.description
         })
         .then((response) => {
