@@ -5,11 +5,12 @@
       Occurrences
       <router-link
         slot="right"
-        to="/"
+        to="/occurrences/csv"
         class="button"
       >
-        Dashboard
+        Create Ocurrence by CSV
       </router-link>
+    
     </hero-bar>
     <section class="section is-main-section">
       <notification-bar class="is-info">
