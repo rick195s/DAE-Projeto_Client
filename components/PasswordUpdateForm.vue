@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
@@ -69,7 +69,7 @@ export default defineComponent({
   components: {
     CardComponent
   },
-  data () {
+  data() {
     return {
       isLoading: false,
       form: {
@@ -80,32 +80,48 @@ export default defineComponent({
     }
   },
   methods: {
-    submit () {
-      if (!this.validation()){
+    submit() {
+      if (!this.validation()) {
         return;
       }
 
-      this.isLoading = true
-      this.$store.dispatch('auth/updatePassword', this.form)
+      this.loading = true
+      this.$axios
+        .$put('/api/auth/updatePassword', {
+          oldPassword: this.form.password_current,
+          newPassword: this.form.password,
+          confirmNewPassword: this.form.password_confirmation
+        })
         .then(() => {
-          this.isLoading = false
           this.$buefy.toast.open({
-            message: 'Password updated',
+            message: 'Password updated successfully',
             type: 'is-success'
           })
         })
-        .catch(() => {
-          this.isLoading = false
-          this.$buefy.toast.open({
-            message: 'Password update failed',
-            type: 'is-danger'
+        .catch((error) => {
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: true
           })
         })
+        .finally(() => {
+          this.loading = false
+        })
+
     },
     validation() {
       if (this.form.password == null || this.form.password_confirmation == null || this.form.password_current == null) {
         this.$buefy.toast.open({
           message: 'Please fill all fields',
+          type: 'is-danger'
+        })
+        return false;
+      }
+
+      if (this.form.newPassword.length < 8) {
+        this.$buefy.toast.open({
+          message: 'Password must be at least 8 characters',
           type: 'is-danger'
         })
         return false;
