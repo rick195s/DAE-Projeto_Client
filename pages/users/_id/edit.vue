@@ -28,26 +28,23 @@
               required
             />
           </b-field>
-
-          <b-field
-            label="Email"
-            horizontal
-          >
-            <b-input
-              v-model="form.email"
-              type="email"
-              placeholder="xyz@mail.pt"
-              required
-            />
-          </b-field>
           <b-field
             horizontal
             label="Role"
           >
-            <b-select v-model="form.role" placeholder="Select a role">
-              <option value="CLIENT">Client</option>
-              <option value="INSURER_EXPERT">Insurer Expert</option>
-              <option value="REPAIR_SHOP_EXPERT">Repair Shop Expert</option>
+            <b-select
+              v-model="form.role"
+              placeholder="Select a role"
+            >
+              <option value="CLIENT">
+                Client
+              </option>
+              <option value="INSURER_EXPERT">
+                Insurer Expert
+              </option>
+              <option value="REPAIR_SHOP_EXPERT">
+                Repair Shop Expert
+              </option>
             </b-select>
           </b-field>
 
@@ -94,10 +91,7 @@ export default defineComponent({
   data () {
     return {
       form: {
-        name: '',
-        email: '',
-        password: '',
-        role: ''
+        name: ''
       },
       isLoading: false
     }
@@ -105,7 +99,7 @@ export default defineComponent({
   created () {
     this.loading = true
     this.$axios
-      .$get('/api/users/'+ this.$route.params.id)
+      .$get('/api/users/' + this.$route.params.id)
       .then((user) => {
         this.form = user
       })
@@ -122,21 +116,28 @@ export default defineComponent({
   },
   methods: {
     update () {
-      if (!this.verifyForm()){
+      if (!this.verifyForm()) {
         return
       }
 
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
-      this.$axios.put('/api/users/'+ this.$route.params.id, this.form).then(() => {
-        this.$router.push('/users')
-        this.isLoading = false
-      })
-      // this.isLoading não vai atualizar
-      // this.isLoading = false
+      
+      this.$axios
+        .put('/api/users/' + this.$route.params.id, this.form)
+        .then(() => {
+          this.$router.push('/users')
+          this.isLoading = false
+        })
+
     },
     verifyForm () {
-      if (this.form.name === '' || this.form.email === '' || this.form.password === '' || this.form.role === '') {
+      if (
+        this.form.name === '' ||
+        this.form.email === '' ||
+        this.form.password === '' ||
+        this.form.role === ''
+      ) {
         this.$buefy.toast.open({
           message: 'Please fill all the fields',
           type: 'is-danger'

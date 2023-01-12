@@ -87,6 +87,14 @@ export default defineComponent({
       }
     }
   },
+  created () {
+    console.log(this.$store.state.rememberMe)
+    if (this.$store.state.rememberMe) {
+      this.$router.push('/')
+    } else {
+      this.$store.commit('logout')
+    }
+  },
   methods: {
     submit () {
       this.isLoading = true
@@ -96,6 +104,7 @@ export default defineComponent({
       }, 750)
     },
     loginClick () {
+      console.log(this.form.remember)
       this.$axios
         .$post('/api/auth/login', {
           email: this.form.email,
@@ -109,6 +118,7 @@ export default defineComponent({
           })
           console.log(tokenAux)
           this.$store.commit('token', tokenAux)
+          this.$store.commit('rememberMe', this.form.remember)
           const config = {
             headers: { Authorization: `Bearer ${tokenAux}` }
           }
