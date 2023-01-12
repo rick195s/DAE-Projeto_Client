@@ -89,7 +89,6 @@ export default defineComponent({
     }
   },
   created () {
-    console.log(this.$store.state.rememberMe)
     if (this.$store.state.rememberMe) {
       this.$router.push('/')
     }
