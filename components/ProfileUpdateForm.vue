@@ -71,7 +71,7 @@ export default defineComponent({
   created () {
     this.id = 0
     const config = {
-      headers: { Authorization: `Bearer ${this.$store.state.token}` }
+      headers: { Authorization: this.$auth.getToken('local') }
     }
     this.$axios.get('/api/auth/user', config)
       .then((user) => {
@@ -102,7 +102,9 @@ export default defineComponent({
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
       this.$axios.put('/api/users/'+ this.id , this.form).then(() => {
-        this.$store.commit('user', this.form)
+        let userToUpdate = { ...this.$auth.user }
+        userToUpdate.name = this.form.name
+        this.$auth.setUser(userToUpdate)
         this.$router.push('/profile')
         this.isLoading = false
       })
