@@ -89,8 +89,11 @@ export default defineComponent({
     }
   },
   created () {
-    if (this.$store.state.rememberMe) {
-      this.$router.push('/')
+    if (
+      this.$auth.$storage.getLocalStorage('remember') &&
+      this.$auth.loggedIn
+    ) {
+      this.$router.replace('/')
     }
   },
   methods: {
@@ -105,10 +108,12 @@ export default defineComponent({
           }
         })
         .then(() => {
+          this.$auth.$storage.setLocalStorage('remember', this.form.remember)
           this.showSnackbar('Login successful', 'is-success')
           this.$router.push('/')
         })
         .catch((error) => {
+          console.log(error)
           this.showSnackbar(error.response?.data.reason || 'Login Failed')
         })
         .finally(() => {
