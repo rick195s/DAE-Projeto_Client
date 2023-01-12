@@ -122,7 +122,7 @@ export default defineComponent({
 
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
-      
+
       this.$axios
         .put('/api/users/' + this.$route.params.id, this.form)
         .then(() => {
