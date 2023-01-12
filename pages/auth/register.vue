@@ -26,11 +26,33 @@
         />
       </b-field>
 
+      <b-field label="NIF or NIPC">
+        <b-input
+          v-model="form.nif"
+          type="number"
+          name="nif"
+          maxlength="9"
+          minlength="9"
+          placeholder="999999999"
+          required
+        />
+      </b-field>
+
       <b-field label="Password">
         <b-input
           v-model="form.password"
           type="password"
           name="password"
+          password-reveal
+          required
+        />
+      </b-field>
+
+      <b-field label="Cofirm Password">
+        <b-input
+          v-model="form.passwordConfirmation"
+          type="password"
+          name="passwordConfirmation"
           password-reveal
           required
         />
@@ -76,7 +98,9 @@ export default defineComponent({
       form: {
         name: '',
         email: '',
-        password: ''
+        password: '',
+        passwordConfirmation: '',
+        nif: ''
       },
       isLoading: false
     }
@@ -89,7 +113,12 @@ export default defineComponent({
 
       this.isLoading = true
       this.$axios
-        .$post('/api/auth/register', this.form)
+        .$post('/api/auth/register', {
+          name: this.form.name,
+          email: this.form.email,
+          password: this.form.password,
+          nif_nipc: this.form.nif
+        })
         .then(() => {
           this.showSnackbar('Register successful', 'is-success')
 
@@ -170,9 +199,25 @@ export default defineComponent({
         return false
       }
 
+      if (this.form.nif.length !== 9) {
+        this.$buefy.toast.open({
+          message: 'NIF/NIPC must have 9 digits',
+          type: 'is-danger'
+        })
+        return false
+      }
+
       if (this.form.password.length < 8) {
         this.$buefy.toast.open({
           message: 'Password must have at least 8 characters',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (this.form.passwordConfirmation !== this.form.password) {
+        this.$buefy.toast.open({
+          message: 'Password and Password Confirmation dont match',
           type: 'is-danger'
         })
         return false
@@ -184,6 +229,8 @@ export default defineComponent({
       this.form.name = ''
       this.form.email = ''
       this.form.password = ''
+      this.form.passwordConfirmation = ''
+      this.form.nif = ''
     }
   }
 })
