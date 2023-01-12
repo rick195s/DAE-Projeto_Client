@@ -36,6 +36,25 @@
           </b-button>
         </div>
       </b-table-column>
+      <b-table-column
+        v-slot="props"
+        custom-key="actions"
+        label="Details"
+        cell-class="is-actions-cell"
+      >
+        <div class="buttons no-wrap">
+          <b-button
+            tag="router-link"
+            :to="`/policies/${props.row.id}`"
+            type="is-link"
+            label="Details Policies"
+            icon="account-edit"
+            size="is-small"
+          >
+            Docs
+          </b-button>
+        </div>
+      </b-table-column>
       <empty-section
         v-if="!loading"
         slot="empty"
