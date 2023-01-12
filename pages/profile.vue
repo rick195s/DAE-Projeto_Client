@@ -63,6 +63,50 @@ export default defineComponent({
     return {
       titleStack: ['Admin', 'Profile']
     }
+  },
+  methods: {
+    update () {
+      if (!this.verifyForm()) {
+        return
+      }
+      this.isLoading = true
+      console.log('is loading : ' + this.isLoading)
+      this.$axios
+        .put('/api/users/' + this.$route.params.id, this.form)
+        .then(() => {
+          this.$store.commit('user', this.form)
+          this.$router.push('/users')
+          this.isLoading = false
+        })
+      // this.isLoading não vai atualizar
+      // this.isLoading = false
+    },
+    verifyForm () {
+      if (this.form.name === '') {
+        this.$buefy.toast.open({
+          message: 'Please fill all the fields',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (this.form.name.length > 50) {
+        this.$buefy.toast.open({
+          message: 'Name must have less than 50 characters',
+          type: 'is-danger'
+        })
+        return false
+      }
+
+      if (/^[a-z A-Z .]+$/.test(this.form.name) === false) {
+        this.$buefy.toast.open({
+          message: 'Name must have only letters',
+          type: 'is-danger'
+        })
+        return false
+      }
+      return true
+    }
   }
 })
 </script>
