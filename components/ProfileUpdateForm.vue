@@ -46,7 +46,8 @@ export default defineComponent({
       form: {
         name: ''
       },
-      isLoading: false
+      isLoading: false,
+      id: 0
     }
   },
   computed: {
@@ -67,28 +68,44 @@ export default defineComponent({
       }
     }
   },
+  created () {
+    this.id = 0
+    const config = {
+      headers: { Authorization: `Bearer ${this.$store.state.token}` }
+    }
+    this.$axios.get('/api/auth/user', config)
+      .then((user) => {
+        this.id = user.data.id
+        this.loading = true
+        this.$axios
+          .$get('/api/users/' + this.id)
+          .then((user) => {
+            this.form = user
+          })
+          .catch((error) => {
+            this.$buefy.snackbar.open({
+              message: error.message,
+              type: 'is-danger',
+              queue: true
+            })
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      })
+  },
   methods: {
     submit () {
       if (!this.verifyForm()) {
         return
       }
       this.isLoading = true
-      let id = 0
-      const config = {
-        headers: { Authorization: `Bearer ${this.$store.state.token}` }
-      }
-      this.$axios.get('/api/auth/user', config)
-        .then((user) => {
-          console.log(user.data)
-          id = user.data.id
-
-          console.log('is loading : ' + this.isLoading)
-          this.$axios.put('/api/users/'+ id, this.form).then(() => {
-            this.$store.commit('user', this.form)
-            this.$router.push('/profile')
-            this.isLoading = false
-          })
-        })
+      console.log('is loading : ' + this.isLoading)
+      this.$axios.put('/api/users/'+ this.id , this.form).then(() => {
+        this.$store.commit('user', this.form)
+        this.$router.push('/profile')
+        this.isLoading = false
+      })
     },
     verifyForm () {
       if (this.form.name === '') {
