@@ -1,26 +1,7 @@
 <template>
   <div>
-    <b-modal
-      v-model="isFileCardModalActive"
-      :width="640"
-      scroll="keep"
-    >
-      <div class="card">
-        <div class="card-image">
-          <figure class="image is-4by3">
-            <img
-              :src="selectedFile?.path"
-              :alt="selectedFile?.name"
-            >
-          </figure>
-        </div>
-      </div>
-    </b-modal>
-
     <title-bar :title-stack="titleStack" />
-    <hero-bar>
-      Policie #{{ $route.params.id }}
-    </hero-bar>
+    <hero-bar> Policie #{{ $route.params.id }} </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
         <card-component
@@ -35,7 +16,7 @@
               readonly
             />
           </b-field>
-          
+
           <hr>
           <b-field label="Client ID">
             <b-input
@@ -73,12 +54,12 @@
             />
           </b-field>
         </card-component><card-component
-        title="Details about the Type"
+          v-if="policie?.policyTypeDetails"
+          title="Details about the Type"
           icon="account"
           class="tile is-child"
-          v-if="policie?.policyTypeDetails"
         >
-        <b-field label="Type">
+          <b-field label="Type">
             <b-input
               :value="policie?.policyTypeDetails?.type ?? 'Type'"
               custom-class="is-static"
@@ -109,16 +90,10 @@
       </tiles-block>
     </section>
   </div>
-
-
-
 </template>
-  
 
 <script>
 import { defineComponent } from 'vue'
-import NotificationBar from '@/components/NotificationBar.vue'
-import OccurrencesTable from '@/components/occurrences/OccurrencesTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
 import HeroBar from '@/components/HeroBar.vue'
@@ -128,9 +103,7 @@ export default defineComponent({
   components: {
     HeroBar,
     TitleBar,
-    CardComponent,
-    OccurrencesTable,
-    NotificationBar
+    CardComponent
   },
   data () {
     return {
