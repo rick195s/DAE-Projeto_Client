@@ -24,7 +24,7 @@ export default [
       to: '/occurrences',
       label: 'Occurrences',
       icon: 'format-list-checkbox',
-      roles: ['CLIENT', 'ADMINISTRATOR', 'REPAIR_SHOP_EXPERT', 'INSURER_EXPERT']
+      roles: ['CLIENT', 'ADMINISTRATOR']
     },
     {
       to: '/repairshops',

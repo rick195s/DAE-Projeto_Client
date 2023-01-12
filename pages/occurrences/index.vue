@@ -10,19 +10,8 @@
       >
         Create Ocurrence by CSV
       </router-link>
-    
     </hero-bar>
     <section class="section is-main-section">
-      <notification-bar class="is-info">
-        <div>
-          <b-icon
-            icon="buffer"
-            custom-size="default"
-          />
-          <b>Empty table.</b> When there's nothing to show
-        </div>
-      </notification-bar>
-
       <card-component class="has-table has-mobile-sort-spaced">
         <occurrences-table
           :data="occurrences"
@@ -35,7 +24,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import NotificationBar from '@/components/NotificationBar.vue'
 import OccurrencesTable from '@/components/occurrences/OccurrencesTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -47,8 +35,7 @@ export default defineComponent({
     HeroBar,
     TitleBar,
     CardComponent,
-    OccurrencesTable,
-    NotificationBar
+    OccurrencesTable
   },
   data () {
     return {

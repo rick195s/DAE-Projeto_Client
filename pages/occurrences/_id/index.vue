@@ -25,6 +25,7 @@
     <hero-bar>
       Occurrence #{{ $route.params.id }}
       <action-buttons
+        v-if="['ADMINISTRATOR', 'INSURER_EXPERT'].includes($auth.user.role)"
         slot="right"
         @approved="
           $refs.historySteps.approved()
@@ -96,7 +97,7 @@
           icon="account"
           class="tile is-child"
         >
-          <span v-if="showRepairShops">
+          <span v-if="showRepairShops && ['CLIENT'].includes($auth.user.role)">
             <b-field
               horizontal
               label="Select a repair shop"
@@ -138,6 +139,7 @@
               />
             </b-field>
           </span>
+          <!-- Everyone can see this because everyone can upload occurrence files (extra) -->
           <file-upload ref="fileUploadComponent" />
           <form-buttons
             :loading="loading"
