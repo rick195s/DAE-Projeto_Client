@@ -28,18 +28,6 @@
               required
             />
           </b-field>
-
-          <b-field
-            label="Email"
-            horizontal
-          >
-            <b-input
-              v-model="form.email"
-              type="email"
-              placeholder="xyz@mail.pt"
-              required
-            />
-          </b-field>
           <b-field
             horizontal
             label="Role"
@@ -94,10 +82,7 @@ export default defineComponent({
   data () {
     return {
       form: {
-        name: '',
-        email: '',
-        password: '',
-        role: ''
+        name: ''
       },
       isLoading: false
     }
@@ -129,6 +114,7 @@ export default defineComponent({
       this.isLoading = true
       console.log('is loading : ' + this.isLoading)
       this.$axios.put('/api/users/'+ this.$route.params.id, this.form).then(() => {
+        this.$store.commit('user', this.form)
         this.$router.push('/users')
         this.isLoading = false
       })
