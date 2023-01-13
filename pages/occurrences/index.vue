@@ -4,6 +4,7 @@
     <hero-bar>
       Occurrences
       <router-link
+        v-if="this.$auth.user.role !== 'ADMINISTRATOR' && this.$auth.user.role !== 'REPAIR_SHOP_EXPERT' && this.$auth.user.role !== 'INSURER_EXPERT'"
         slot="right"
         to="/occurrences/csv"
         class="button"
