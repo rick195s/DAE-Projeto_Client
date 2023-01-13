@@ -17,7 +17,7 @@
           :data="occurrences"
           :loading="loading"
           :total="total"
-          :per-page="10"
+          :per-page="perPage"
           @page-change="pageChange"
         />
       </card-component>
@@ -52,7 +52,8 @@ export default defineComponent({
       ],
       loading: false,
       occurrences: [],
-      total: 0
+      total: 0,
+      perPage: 5
     }
   },
   created () {
@@ -80,7 +81,10 @@ export default defineComponent({
     },
     pageChange (page) {
       this.loadOccurrences(
-        '/api/occurrences?offset=' + (page - 1) * this.perPage
+        '/api/occurrences?offset=' +
+          (page - 1) * this.perPage +
+          '&limit=' +
+          this.perPage
       )
     }
   }
