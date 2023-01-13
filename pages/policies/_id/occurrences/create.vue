@@ -61,7 +61,7 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: ['Admin', 'New Occurrence'],
+      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'New Occurrence'],
       departments: ['Business Development', 'Marketing', 'Sales'],
       form: {
         description: null
