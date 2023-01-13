@@ -60,7 +60,7 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: ['Admin', 'Profile']
+      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'Profile']
     }
   },
   methods: {
