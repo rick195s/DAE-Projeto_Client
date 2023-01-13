@@ -9,6 +9,11 @@
     <b-table
       :data="data"
       :loading="loading"
+      paginated
+      backend-pagination
+      :total="total"
+      :per-page="perPage"
+      @page-change="$emit('page-change', $event)"
     >
       <b-table-column
         v-slot="props"
@@ -42,7 +47,8 @@
         v-slot="props"
         field="edit"
       >
-        <router-link v-if="props.row.role !== 'ADMINISTRATOR'"
+        <router-link
+          v-if="props.row.role !== 'ADMINISTRATOR'"
           :to="'/users/' + props.row.id + '/edit'"
           class="button is-primary"
         >
@@ -56,7 +62,7 @@
         <b-button
           v-if="props.row.role !== 'ADMINISTRATOR'"
           class="button is-danger"
-          @click="delete(props.row.id)"
+          @click="delete props.row.id"
         >
           Delete
         </b-button>
@@ -72,7 +78,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import ModalBox from '@/components/ModalBox.vue'
 import EmptySection from '@/components/EmptySection.vue'
 
@@ -86,6 +91,10 @@ export default defineComponent({
       type: Number,
       default: 10
     },
+    total: {
+      type: Number,
+      default: 20
+    },
     loading: {
       type: Boolean,
       default: true
@@ -95,6 +104,7 @@ export default defineComponent({
       default: () => []
     }
   },
+  emits: ['page-change'],
   data () {
     return {
       checkedRows: [],
@@ -102,12 +112,7 @@ export default defineComponent({
       trashObject: null
     }
   },
-  computed: {
-    paginated () {
-      return this.clients.length > this.perPage
-    },
-    ...mapState(['clients'])
-  },
+
   methods: {
     trashModalOpen (obj) {
       this.trashObject = obj
@@ -129,7 +134,7 @@ export default defineComponent({
         .$delete('/api/users/' + id)
         .then(() => {
           this.$buefy.snackbar.open({
-            message: 'User ' +id+ ' deleted',
+            message: 'User ' + id + ' deleted',
             type: 'is-success',
             queue: false
           })
@@ -141,9 +146,6 @@ export default defineComponent({
             type: 'is-danger',
             queue: true
           })
-        })
-        .finally(() => {
-          this.loading = false
         })
     }
   }
