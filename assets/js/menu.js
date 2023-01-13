@@ -14,17 +14,29 @@ export default [
       to: '/profile',
       label: 'Profile',
       icon: 'account-circle',
-      roles: ['CLIENT', 'ADMINISTRATOR', 'REPAIR_SHOP_EXPERT', 'INSURER_EXPERT']
+      roles: ['CLIENT']
+    },
+    {
+      to: '/occurrences',
+      label: 'Occurrences',
+      icon: 'format-list-checkbox',
+      roles: ['CLIENT']
     }
   ],
 
   'Admin',
   [
     {
+      to: '/profile',
+      label: 'Profile',
+      icon: 'account-circle',
+      roles: ['ADMINISTRATOR']
+    },
+    {
       to: '/occurrences',
       label: 'Occurrences',
       icon: 'format-list-checkbox',
-      roles: ['CLIENT', 'ADMINISTRATOR']
+      roles: ['ADMINISTRATOR']
     },
     {
       to: '/repairshops',
@@ -41,6 +53,12 @@ export default [
   ],
   'Expert',
   [
+    {
+      to: '/profile',
+      label: 'Profile',
+      icon: 'account-circle',
+      roles: ['REPAIR_SHOP_EXPERT', 'INSURER_EXPERT']
+    },
     {
       to: '/occurrences',
       label: 'Occurrences',

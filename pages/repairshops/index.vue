@@ -1,6 +1,6 @@
 <template>
   <div>
-    <title-bar :title-stack="titleStack" />
+    <title-bar :title-stack="titleStack"/>
     <hero-bar>
       Repair Shops
       <router-link
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import RepairShopsTable from '@/components/repairshops/RepairShopsTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -50,14 +50,15 @@ export default defineComponent({
     RepairShopsTable,
     NotificationBar
   },
-  data () {
+  middleware: 'admin',
+  data() {
     return {
       titleStack: ['Administrator', 'All Repair Shops'],
       loading: false,
       repairShops: []
     }
   },
-  created () {
+  created() {
     this.loading = true
     this.$axios
       .$get('/api/repairshops/')
