@@ -39,7 +39,7 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: ['Admin', 'My Occurrences'],
+      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'My Occurrences'],
       loading: false,
       occurrences: []
     }
