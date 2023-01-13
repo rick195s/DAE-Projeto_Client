@@ -66,7 +66,7 @@ export default defineComponent({
   middleware: 'policies',
   data() {
     return {
-      titleStack: ['Admin', 'Dashboard'],
+      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'Dashboard'],
       chartData: null,
       policies: [],
       loading: false,

@@ -181,7 +181,7 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: ['Admin', 'Occurrence Details'],
+      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'Occurrence Details'],
       files: [],
       isFileCardModalActive: false,
       selectedFile: null,

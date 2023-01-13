@@ -53,7 +53,7 @@ export default defineComponent({
   middleware: 'admin',
   data () {
     return {
-      titleStack: ['Admin', 'All Users'],
+      titleStack: ['Administrator', 'All Users'],
       loading: false,
       users: []
     }
