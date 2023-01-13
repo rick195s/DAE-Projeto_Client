@@ -69,15 +69,15 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import CardComponent from '@/components/CardComponent.vue'
 
 export default defineComponent({
   name: 'LoginView',
   auth: false,
-  components: { CardComponent },
+  components: {CardComponent},
   layout: 'guest',
-  data () {
+  data() {
     return {
       isLoading: false,
       user: [],
@@ -88,7 +88,7 @@ export default defineComponent({
       }
     }
   },
-  created () {
+  created() {
     if (
       this.$auth.$storage.getLocalStorage('remember') &&
       this.$auth.loggedIn
@@ -97,7 +97,7 @@ export default defineComponent({
     }
   },
   methods: {
-    loginClick () {
+    loginClick() {
       this.isLoading = true
 
       this.$auth
@@ -110,7 +110,10 @@ export default defineComponent({
         .then(() => {
           this.$auth.$storage.setLocalStorage('remember', this.form.remember)
           this.showSnackbar('Login successful', 'is-success')
+
           this.$router.push('/')
+
+
         })
         .catch((error) => {
           console.log(error)
@@ -120,7 +123,7 @@ export default defineComponent({
           this.isLoading = false
         })
     },
-    showSnackbar (message, type) {
+    showSnackbar(message, type) {
       this.$buefy.snackbar.open({
         message,
         type: type || 'is-danger',

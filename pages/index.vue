@@ -1,6 +1,6 @@
 <template>
   <div>
-    <title-bar :title-stack="titleStack" />
+    <title-bar :title-stack="titleStack"/>
     <hero-bar :has-right-visible="false">
       Dashboard
     </hero-bar>
@@ -12,14 +12,16 @@
           icon="account-multiple"
           :number="512"
           label="Clients"
-        /><card-widget
+        />
+        <card-widget
           class="tile is-child"
           type="is-info"
           icon="cart-outline"
           :number="7770"
           prefix="$"
           label="Sales"
-        /><card-widget
+        />
+        <card-widget
           class="tile is-child"
           type="is-success"
           icon="chart-timeline-variant"
@@ -49,8 +51,9 @@ import TilesBlock from '@/components/TilesBlock.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import PoliciesTable from '@/components/policies/PoliciesTable.vue'
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: 'HomeView',
   components: {
     PoliciesTable,
@@ -60,7 +63,8 @@ export default {
     HeroBar,
     TitleBar
   },
-  data () {
+  middleware: 'policies',
+  data() {
     return {
       titleStack: ['Admin', 'Dashboard'],
       chartData: null,
@@ -111,13 +115,13 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.$buefy.snackbar.open({
       message: 'Welcome back',
       queue: false
     })
   },
-  created () {
+  created() {
     this.loading = true
     this.$axios
       .$get('/api/policies/')
@@ -135,5 +139,5 @@ export default {
         this.loading = false
       })
   }
-}
+})
 </script>
