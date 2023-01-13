@@ -4,7 +4,8 @@ export default [
     {
       to: '/',
       icon: 'desktop-mac',
-      label: 'Dashboard'
+      label: 'Dashboard',
+      roles: ['ADMINISTRATOR', 'CLIENT']
     }
   ],
   'Client',
@@ -12,7 +13,8 @@ export default [
     {
       to: '/profile',
       label: 'Profile',
-      icon: 'account-circle'
+      icon: 'account-circle',
+      roles: ['CLIENT', 'ADMINISTRATOR', 'REPAIR_SHOP_EXPERT', 'INSURER_EXPERT']
     }
   ],
 
@@ -21,17 +23,20 @@ export default [
     {
       to: '/occurrences',
       label: 'Occurrences',
-      icon: 'format-list-checkbox'
+      icon: 'format-list-checkbox',
+      roles: ['CLIENT', 'ADMINISTRATOR']
     },
     {
       to: '/repairshops',
       label: 'Repair Shops',
-      icon: 'table'
+      icon: 'table',
+      roles: ['ADMINISTRATOR']
     },
     {
       to: '/users',
       label: 'Users',
-      icon: 'table'
+      icon: 'table',
+      roles: ['ADMINISTRATOR']
     }
   ],
   'Expert',
@@ -39,7 +44,8 @@ export default [
     {
       to: '/occurrences',
       label: 'Occurrences',
-      icon: 'format-list-checkbox'
+      icon: 'format-list-checkbox',
+      roles: ['REPAIR_SHOP_EXPERT', 'INSURER_EXPERT']
     }
   ]
 ]

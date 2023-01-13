@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="menu is-menu-main">
-      <template v-for="(menuGroup, index) in menu">
+      <template v-for="(menuGroup, index) in filteredMenus">
         <p
           v-if="typeof menuGroup === 'string'"
           :key="`label-${index}`"
@@ -48,9 +48,32 @@ export default defineComponent({
       default: () => []
     }
   },
+  data () {
+    return {
+      filteredMenus: []
+    }
+  },
   computed: {
     ...mapState(['isAsideVisible'])
   },
+  created () {
+    this.menu.forEach((group) => {
+      if (!(group instanceof Array)) {
+        this.filteredMenus.push(group)
+        return
+      }
+
+      group = group.filter((item) => {
+        if (item.roles.includes(this.$auth.user.role)) {
+          return true
+        }
+        return false
+      })
+
+      this.filteredMenus.push(group)
+    })
+  },
+
   methods: {
     asideToggleDesktopOnly () {
       this.$store.dispatch('asideDesktopOnlyToggle')
