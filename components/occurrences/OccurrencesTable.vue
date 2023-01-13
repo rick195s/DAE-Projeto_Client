@@ -9,6 +9,11 @@
     <b-table
       :data="data"
       :loading="loading"
+      paginated
+      backend-pagination
+      :total="total"
+      :per-page="perPage"
+      @page-change="$emit('page-change', $event)"
     >
       <b-table-column
         v-slot="props"
@@ -67,7 +72,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import ModalBox from '@/components/ModalBox.vue'
 import EmptySection from '@/components/EmptySection.vue'
 
@@ -81,6 +85,10 @@ export default defineComponent({
       type: Number,
       default: 10
     },
+    total: {
+      type: Number,
+      default: 20
+    },
     loading: {
       type: Boolean,
       default: true
@@ -90,18 +98,13 @@ export default defineComponent({
       default: () => []
     }
   },
+  emits: ['page-change'],
   data () {
     return {
       checkedRows: [],
       isModalActive: false,
       trashObject: null
     }
-  },
-  computed: {
-    paginated () {
-      return this.clients.length > this.perPage
-    },
-    ...mapState(['clients'])
   },
   methods: {
     trashModalOpen (obj) {

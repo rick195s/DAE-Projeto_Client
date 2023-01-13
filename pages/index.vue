@@ -1,6 +1,6 @@
 <template>
   <div>
-    <title-bar :title-stack="titleStack"/>
+    <title-bar :title-stack="titleStack" />
     <hero-bar :has-right-visible="false">
       Dashboard
     </hero-bar>
@@ -51,7 +51,7 @@ import TilesBlock from '@/components/TilesBlock.vue'
 import CardWidget from '@/components/CardWidget.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import PoliciesTable from '@/components/policies/PoliciesTable.vue'
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'HomeView',
@@ -64,9 +64,16 @@ export default defineComponent({
     TitleBar
   },
   middleware: 'policies',
-  data() {
+  data () {
     return {
-      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'Dashboard'],
+      titleStack: [
+        this.$auth.user.role === 'ADMINISTRATOR'
+          ? 'Administrator'
+          : this.$auth.user.role === 'CLIENT'
+            ? 'Client'
+            : 'Expert',
+        'Dashboard'
+      ],
       chartData: null,
       policies: [],
       loading: false,
@@ -115,13 +122,13 @@ export default defineComponent({
       }
     }
   },
-  mounted() {
+  mounted () {
     this.$buefy.snackbar.open({
       message: 'Welcome back',
       queue: false
     })
   },
-  created() {
+  created () {
     this.loading = true
     this.$axios
       .$get('/api/policies/')

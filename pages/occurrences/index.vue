@@ -16,6 +16,9 @@
         <occurrences-table
           :data="occurrences"
           :loading="loading"
+          :total="total"
+          :per-page="10"
+          @page-change="pageChange"
         />
       </card-component>
     </section>
@@ -39,28 +42,47 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'My Occurrences'],
+      titleStack: [
+        this.$auth.user.role === 'ADMINISTRATOR'
+          ? 'Administrator'
+          : this.$auth.user.role === 'CLIENT'
+            ? 'Client'
+            : 'Expert',
+        'My Occurrences'
+      ],
       loading: false,
-      occurrences: []
+      occurrences: [],
+      total: 0
     }
   },
   created () {
-    this.loading = true
-    this.$axios
-      .$get('/api/occurrences/')
-      .then((occurrences) => {
-        this.occurrences = occurrences
-      })
-      .catch((error) => {
-        this.$buefy.snackbar.open({
-          message: error.message,
-          type: 'is-danger',
-          queue: true
+    this.loadOccurrences()
+  },
+  methods: {
+    loadOccurrences (url) {
+      this.loading = true
+      this.$axios
+        .$get(url || '/api/occurrences')
+        .then((occurrences) => {
+          this.total = occurrences.metadata.totalCount
+          this.occurrences = occurrences.data
         })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+        .catch((error) => {
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: true
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    pageChange (page) {
+      this.loadOccurrences(
+        '/api/occurrences?offset=' + (page - 1) * this.perPage
+      )
+    }
   }
 })
 </script>
