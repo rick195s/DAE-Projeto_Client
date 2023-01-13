@@ -7,8 +7,17 @@
         slot="right"
         to="/"
         class="button"
+        v-if="this.$auth.user.role !== 'REPAIR_SHOP_EXPERT' && this.$auth.user.role !== 'INSURER_EXPERT'"
       >
         Dashboard
+      </router-link>
+      <router-link
+        v-else
+        slot="right"
+        to="/occurrences"
+        class="button"
+      >
+        Occurrences
       </router-link>
     </hero-bar>
     <section class="section is-main-section">
@@ -107,10 +116,10 @@ export default defineComponent({
           'Content-Type': 'multipart/form-data'
         })
         .then((response) => {
-          console.log('occurrencia criada: ', response)
+          console.log('occurrencia criada: ', response.data)
         })
         .then(() => {
-          this.$router.push('/')
+          this.$router.push('/occurrences')
         })
         .catch((error) => {
           this.showError(error.response?.data.reason || 'Something went wrong')

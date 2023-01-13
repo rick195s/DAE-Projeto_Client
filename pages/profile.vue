@@ -4,6 +4,7 @@
     <hero-bar>
       Profile
       <nuxt-link
+        v-if="this.$auth.user.role !== 'REPAIR_SHOP_EXPERT' && this.$auth.user.role !== 'INSURER_EXPERT'"
         slot="right"
         to="/"
         class="button"
