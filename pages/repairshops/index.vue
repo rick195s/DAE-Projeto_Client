@@ -5,15 +5,15 @@
       Repair Shops
       <router-link
         slot="right"
-        to="/repairshops/create"
+        to="/"
         class="button"
       >
-        Create Repair Shop
+        Dashboard
       </router-link>
     </hero-bar>
 
     <section class="section is-main-section">
-      <notification-bar class="is-info">
+      <notification-bar class="is-info" v-if="repairShops === null">
         <div>
           <b-icon
             icon="buffer"
