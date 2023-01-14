@@ -8,7 +8,7 @@
         class="navbar-item is-hidden-touch is-hidden-widescreen is-desktop-icon-only"
         @click="asideToggleDesktopOnly"
       >
-        <b-icon icon="menu"/>
+        <b-icon icon="menu" />
       </a>
       <div class="aside-tools-label">
         <span><b>Admin</b> One</span>
@@ -35,20 +35,20 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue'
-import {mapState} from 'vuex'
+import { defineComponent } from 'vue'
+import { mapState } from 'vuex'
 import AsideMenuList from '@/components/AsideMenuList.vue'
 
 export default defineComponent({
   name: 'AsideMenu',
-  components: {AsideMenuList},
+  components: { AsideMenuList },
   props: {
     menu: {
       type: Array,
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
       filteredMenus: []
     }
@@ -56,7 +56,7 @@ export default defineComponent({
   computed: {
     ...mapState(['isAsideVisible'])
   },
-  created() {
+  created () {
     this.menu.forEach((group) => {
       if (!(group instanceof Array)) {
         this.filteredMenus.push(group)
@@ -72,22 +72,20 @@ export default defineComponent({
       })
 
       this.filteredMenus.push(group)
-
-
     })
 
     for (let i = 0; i < this.filteredMenus.length; i++) {
       if (this.filteredMenus[i].length === 0) {
-        this.filteredMenus.splice(i-1, 1)
+        this.filteredMenus.splice(i - 1, 1)
       }
     }
   },
 
   methods: {
-    asideToggleDesktopOnly() {
+    asideToggleDesktopOnly () {
       this.$store.dispatch('asideDesktopOnlyToggle')
     },
-    menuClick(item) {
+    menuClick (item) {
       //
     }
   }

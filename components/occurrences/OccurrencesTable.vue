@@ -76,7 +76,7 @@ import ModalBox from '@/components/ModalBox.vue'
 import EmptySection from '@/components/EmptySection.vue'
 
 export default defineComponent({
-  name: 'ClientsTableSample',
+  name: 'OccurrencesTable',
   components: { ModalBox, EmptySection },
   props: {
     checkable: Boolean,

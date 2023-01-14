@@ -9,6 +9,9 @@
     <b-table
       :data="data"
       :loading="loading"
+      paginated
+      :total="data.length"
+      :per-page="10"
     >
       <b-table-column
         v-slot="props"
@@ -49,12 +52,11 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState } from 'vuex'
 import ModalBox from '@/components/ModalBox.vue'
 import EmptySection from '@/components/EmptySection.vue'
 
 export default defineComponent({
-  name: 'ClientsTableSample',
+  name: 'RepairShopsTable',
   components: { ModalBox, EmptySection },
   props: {
     checkable: Boolean,
@@ -79,12 +81,7 @@ export default defineComponent({
       trashObject: null
     }
   },
-  computed: {
-    paginated () {
-      return this.clients.length > this.perPage
-    },
-    ...mapState(['clients'])
-  },
+
   methods: {
     trashModalOpen (obj) {
       this.trashObject = obj
