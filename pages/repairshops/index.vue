@@ -13,7 +13,10 @@
     </hero-bar>
 
     <section class="section is-main-section">
-      <notification-bar class="is-info" v-if="repairShops === null">
+      <notification-bar
+        v-if="repairShops === null"
+        class="is-info"
+      >
         <div>
           <b-icon
             icon="buffer"
@@ -61,7 +64,7 @@ export default defineComponent({
   created () {
     this.loading = true
     this.$axios
-      .$get('/api/repairshops/')
+      .$get('/api/repair-shops/')
       .then((repairShops) => {
         this.repairShops = repairShops
       })
