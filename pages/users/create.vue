@@ -89,6 +89,25 @@
               </option>
             </b-select>
           </b-field>
+          <b-field
+            v-if="insurersVisivle"
+            horizontal
+            label="Select Insurer"
+          >
+            <b-select
+              v-model="form.insurerId"
+              placeholder="Insurers"
+              :loading="insurersLoading"
+            >
+              <option
+                v-for="option in insurers"
+                :key="option.id"
+                :value="option.id"
+              >
+                {{ option.name }}
+              </option>
+            </b-select>
+          </b-field>
           <hr>
           <b-field horizontal>
             <b-field grouped>
@@ -137,23 +156,40 @@ export default defineComponent({
         email: '',
         password: '',
         role: '',
-        repairShopId: ''
+        repairShopId: '',
+        insurerId: ''
       },
       isLoading: false,
       repairShopsVisivle: false,
       repairShopsLoading: false,
-      repairShops: []
+      repairShops: [],
+      insurersVisivle: false,
+      insurersLoading: false,
+      insurers: []
     }
   },
   methods: {
     roleChanged () {
       this.repairShopsVisivle = false
+      this.insurersVisivle = false
       if (this.form.role === 'REPAIR_SHOP_EXPERT') {
         this.repairShopsVisivle = true
         if (this.repairShops.length === 0) {
           this.loadRepairShops()
         }
+      } else if (this.form.role === 'INSURER_EXPERT') {
+        this.insurersVisivle = true
+        if (this.insurers.length === 0) {
+          this.loadInsurers()
+        }
       }
+    },
+    loadInsurers () {
+      this.insurersLoading = true
+      this.$axios.$get('/api/insurers').then((response) => {
+        this.insurers = response
+        this.insurersLoading = false
+      })
     },
     loadRepairShops () {
       this.repairShopsLoading = true
