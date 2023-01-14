@@ -65,7 +65,7 @@
 
           <form-buttons
             :loading="loading"
-            @reset="formReset"
+            @reset="formReset()"
           />
         </form>
       </card-component>
@@ -136,8 +136,7 @@ export default defineComponent({
       })
     },
     formReset () {
-      this.$refs.fileUploadComponent.resetFiles()
-      this.form.description = null
+      this.dropFiles = []
     },
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
