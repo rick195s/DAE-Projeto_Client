@@ -18,13 +18,13 @@
       </b-table-column>
 
       <b-table-column
-        v-if="this.$auth.user.role === 'CLIENT'"
+        v-if="$auth.user.role === 'CLIENT'"
         v-slot="props"
         custom-key="actions"
         label="Actions"
         cell-class="is-actions-cell"
       >
-        <div class="buttons no-wrap" >
+        <div class="buttons no-wrap">
           <b-button
             tag="router-link"
             :to="`/policies/${props.row.id}/occurrences/create`"
