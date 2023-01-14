@@ -354,6 +354,7 @@ export default defineComponent({
           }
           this.occurrence = response
           this.historic = response.historic
+          console.log(this.historic)
         })
         .then(() => {
           this.getRepairShops()

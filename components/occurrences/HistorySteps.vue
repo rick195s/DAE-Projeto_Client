@@ -38,10 +38,15 @@ export default {
 
       val.forEach((historic) => {
         if (historic.state === 'A_AGUARDAR_APROVACAO_PELO_EXPERT') {
-          this.stepIndex = 2
+          this.approved()
         }
         if (historic.state === 'APROVADO_PELA_SEGURADORA') {
-          this.stepIndex = 2
+          this.approved()
+        }
+        if (historic.state === 'NAO_APROVADO_PELA_SEGURADORA') {
+          console.log(historic)
+
+          this.declined()
         }
       })
     }

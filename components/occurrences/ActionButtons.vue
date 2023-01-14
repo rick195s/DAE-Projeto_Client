@@ -1,6 +1,9 @@
 <template>
   <b-field grouped>
-    <div class="control">
+    <div
+      v-if="approveEnable"
+      class="control"
+    >
       <b-button
         native-type="submit"
         type="is-info"
@@ -11,7 +14,10 @@
         Approve
       </b-button>
     </div>
-    <div class="control">
+    <div
+      v-if="declineEnable"
+      class="control"
+    >
       <b-button
         type="is-info"
         native-type="button"
@@ -30,7 +36,9 @@ export default {
   data () {
     return {
       approveLoading: false,
-      declineLoading: false
+      declineLoading: false,
+      declineEnable: true,
+      approveEnable: true
     }
   },
   methods: {
@@ -47,6 +55,8 @@ export default {
         .$patch(`/api/occurrences/${this.$route.params.id}/approved`)
         .then((response) => {
           this.$emit('approved')
+          this.approveEnable = false
+          this.declineEnable = false
         })
         .catch((error) => {
           this.showError(error.message)
@@ -61,6 +71,8 @@ export default {
         .$patch(`/api/occurrences/${this.$route.params.id}/declined`)
         .then((response) => {
           this.$emit('declined')
+          this.approveEnable = false
+          this.declineEnable = false
         })
         .catch((error) => {
           this.showError(error.message)
