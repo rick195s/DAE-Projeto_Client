@@ -49,24 +49,26 @@
       >
         <router-link
           v-if="props.row.role !== 'ADMINISTRATOR'"
-          :to="'/users/' + props.row.id + '/edit'"
-          class="button is-primary"
-        >
-          Edit
+          :to="'/users/' + props.row.id + '/edit'">
+          <font-awesome-icon icon="fa-solid fa-pencil"/>
+        </router-link>
+        <router-link
+          v-if="props.row.role === 'ADMINISTRATOR' && props.row.email === email"
+          :to="'/profile'">
+          <font-awesome-icon icon="fa-solid fa-pencil"/>
         </router-link>
       </b-table-column>
       <b-table-column
         v-slot="props"
         field="Softdelete"
       >
-        
+
         <b-button
           v-if="props.row.role !== 'ADMINISTRATOR'"
-          @click="deleteUser(props.row.id)"
-          class="button is-danger"
-        >
-          Delete
+          @click="deleteUser(props.row.id)">
+          <font-awesome-icon icon="fa-solid fa-trash"/>
         </b-button>
+
       </b-table-column>
 
       <empty-section
@@ -78,13 +80,13 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import ModalBox from '@/components/ModalBox.vue'
 import EmptySection from '@/components/EmptySection.vue'
 
 export default defineComponent({
   name: 'ClientsTableSample',
-  components: { ModalBox, EmptySection },
+  components: {ModalBox, EmptySection},
   props: {
     checkable: Boolean,
     isEmpty: Boolean,
@@ -106,8 +108,9 @@ export default defineComponent({
     }
   },
   emits: ['page-change'],
-  data () {
+  data() {
     return {
+      email: this.$auth.user.email,
       checkedRows: [],
       isModalActive: false,
       trashObject: null
@@ -115,11 +118,11 @@ export default defineComponent({
   },
 
   methods: {
-    trashModalOpen (obj) {
+    trashModalOpen(obj) {
       this.trashObject = obj
       this.isModalActive = true
     },
-    trashConfirm () {
+    trashConfirm() {
       this.isModalActive = false
 
       this.$buefy.snackbar.open({
@@ -127,10 +130,10 @@ export default defineComponent({
         queue: false
       })
     },
-    trashCancel () {
+    trashCancel() {
       this.isModalActive = false
     },
-    deleteUser(id){
+    deleteUser(id) {
 
       this.isLoading = true
       this.$axios
