@@ -15,7 +15,7 @@
     <section class="section is-main-section">
       <card-component class="has-table has-mobile-sort-spaced">
         <users-table
-          :data="users"
+          :data="users.data"
           :loading="loading"
           :total="total"
           :per-page="perPage"
