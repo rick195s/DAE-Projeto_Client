@@ -22,7 +22,7 @@ export default {
       default: () => []
     }
   },
-  expose: ['declined', 'approved'],
+  expose: ['declined', 'approved', 'concluded'],
   data () {
     return {
       stepIndex: 0,
@@ -46,10 +46,17 @@ export default {
         if (historic.state === 'NAO_APROVADO_PELA_SEGURADORA') {
           this.declined()
         }
+        if (historic.state === 'APROVADO_PELO_EXPERT') {
+          this.concluded()
+        }
       })
     }
   },
   methods: {
+    concluded () {
+      this.stepIndex = 3
+      this.stepType = 'is-success'
+    },
     declined () {
       this.stepIndex = 0
       this.stepType = 'is-danger'
