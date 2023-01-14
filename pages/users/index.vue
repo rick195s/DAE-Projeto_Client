@@ -13,20 +13,13 @@
     </hero-bar>
 
     <section class="section is-main-section">
-      <notification-bar class="is-info">
-        <div>
-          <b-icon
-            icon="buffer"
-            custom-size="default"
-          />
-          <b>Empty table.</b> When there's nothing to show
-        </div>
-      </notification-bar>
-
       <card-component class="has-table has-mobile-sort-spaced">
         <users-table
           :data="users"
           :loading="loading"
+          :total="total"
+          :per-page="perPage"
+          @page-change="pageChange"
         />
       </card-component>
     </section>
@@ -35,7 +28,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import NotificationBar from '@/components/NotificationBar.vue'
 import UsersTable from '@/components/users/UsersTable.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
@@ -47,34 +39,49 @@ export default defineComponent({
     HeroBar,
     TitleBar,
     CardComponent,
-    UsersTable,
-    NotificationBar
+    UsersTable
   },
   middleware: 'admin',
   data () {
     return {
       titleStack: ['Administrator', 'All Users'],
       loading: false,
-      users: []
+      users: [],
+      total: 0,
+      perPage: 10
     }
   },
   created () {
-    this.loading = true
-    this.$axios
-      .$get('/api/users/')
-      .then((users) => {
-        this.users = users
-      })
-      .catch((error) => {
-        this.$buefy.snackbar.open({
-          message: error.message,
-          type: 'is-danger',
-          queue: true
+    this.loadUsers()
+  },
+  methods: {
+    loadUsers (url) {
+      this.loading = true
+      this.$axios
+        .$get(url || '/api/users/')
+        .then((users) => {
+          this.total = users.metadata.totalCount
+          this.users = users.data
         })
-      })
-      .finally(() => {
-        this.loading = false
-      })
+        .catch((error) => {
+          this.$buefy.snackbar.open({
+            message: error.message,
+            type: 'is-danger',
+            queue: true
+          })
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    pageChange (page) {
+      this.loadUsers(
+        '/api/users?offset=' +
+          (page - 1) * this.perPage +
+          '&limit=' +
+          this.perPage
+      )
+    }
   }
 })
 </script>
