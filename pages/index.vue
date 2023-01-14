@@ -12,16 +12,14 @@
           icon="account-multiple"
           :number="512"
           label="Clients"
-        />
-        <card-widget
+        /><card-widget
           class="tile is-child"
           type="is-info"
           icon="cart-outline"
           :number="7770"
           prefix="$"
           label="Sales"
-        />
-        <card-widget
+        /><card-widget
           class="tile is-child"
           type="is-success"
           icon="chart-timeline-variant"
