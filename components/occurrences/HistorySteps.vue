@@ -44,8 +44,6 @@ export default {
           this.approved()
         }
         if (historic.state === 'NAO_APROVADO_PELA_SEGURADORA') {
-          console.log(historic)
-
           this.declined()
         }
       })

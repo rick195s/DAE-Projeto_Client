@@ -35,13 +35,19 @@
         </div>
         <action-buttons
           v-if="['ADMINISTRATOR', 'INSURER_EXPERT'].includes($auth.user.role)"
+          :enabled="
+            actionButtonsEnabled &&
+              !['REJECTED', 'APPROVED'].includes(occurrence?.approvalType)
+          "
           @approved="
             $refs.historySteps.approved()
             showRepairShops = true
+            actionButtonsEnabled = false
           "
           @declined="
             $refs.historySteps.declined()
             showRepairShops = false
+            actionButtonsEnabled = false
           "
         />
       </span>
@@ -209,6 +215,7 @@ export default defineComponent({
       repairShopsLoading: true,
       showRepairShops: false,
       selectedRepairShopId: null,
+      actionButtonsEnabled: true,
       form: {
         name: '',
         email: '',
@@ -349,12 +356,12 @@ export default defineComponent({
       this.$axios
         .$get(`/api/occurrences/${this.$route.params.id}`)
         .then((response) => {
+          console.log(response)
           if (response.approvalType === 'APPROVED') {
             this.showRepairShops = true
           }
           this.occurrence = response
           this.historic = response.historic
-          console.log(this.historic)
         })
         .then(() => {
           this.getRepairShops()

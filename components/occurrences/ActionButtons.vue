@@ -1,9 +1,9 @@
 <template>
-  <b-field grouped>
-    <div
-      v-if="approveEnable"
-      class="control"
-    >
+  <b-field
+    v-if="enabled"
+    grouped
+  >
+    <div class="control">
       <b-button
         native-type="submit"
         type="is-info"
@@ -14,10 +14,7 @@
         Approve
       </b-button>
     </div>
-    <div
-      v-if="declineEnable"
-      class="control"
-    >
+    <div class="control">
       <b-button
         type="is-info"
         native-type="button"
@@ -32,13 +29,17 @@
 </template>
 <script>
 export default {
+  props: {
+    enabled: {
+      type: Boolean,
+      default: true
+    }
+  },
   emits: ['approved', 'declined'],
   data () {
     return {
       approveLoading: false,
-      declineLoading: false,
-      declineEnable: true,
-      approveEnable: true
+      declineLoading: false
     }
   },
   methods: {
@@ -55,8 +56,6 @@ export default {
         .$patch(`/api/occurrences/${this.$route.params.id}/approved`)
         .then((response) => {
           this.$emit('approved')
-          this.approveEnable = false
-          this.declineEnable = false
         })
         .catch((error) => {
           this.showError(error.message)
@@ -71,8 +70,6 @@ export default {
         .$patch(`/api/occurrences/${this.$route.params.id}/declined`)
         .then((response) => {
           this.$emit('declined')
-          this.approveEnable = false
-          this.declineEnable = false
         })
         .catch((error) => {
           this.showError(error.message)
