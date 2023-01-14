@@ -28,25 +28,6 @@
               required
             />
           </b-field>
-          <b-field
-            horizontal
-            label="Role"
-          >
-            <b-select
-              v-model="form.role"
-              placeholder="Select a role"
-            >
-              <option value="CLIENT">
-                Client
-              </option>
-              <option value="INSURER_EXPERT">
-                Insurer Expert
-              </option>
-              <option value="REPAIR_SHOP_EXPERT">
-                Repair Shop Expert
-              </option>
-            </b-select>
-          </b-field>
 
           <hr>
           <b-field horizontal>
@@ -133,12 +114,7 @@ export default defineComponent({
       // this.isLoading = false
     },
     verifyForm () {
-      if (
-        this.form.name === '' ||
-        this.form.email === '' ||
-        this.form.password === '' ||
-        this.form.role === ''
-      ) {
+      if (this.form.name === '') {
         this.$buefy.toast.open({
           message: 'Please fill all the fields',
           type: 'is-danger'
@@ -157,30 +133,6 @@ export default defineComponent({
       if (/^[a-zA-Z .]+$/.test(this.form.name) === false) {
         this.$buefy.toast.open({
           message: 'Name must have only letters',
-          type: 'is-danger'
-        })
-        return false
-      }
-
-      if (this.form.email.length > 50) {
-        this.$buefy.toast.open({
-          message: 'Email must have less than 50 characters',
-          type: 'is-danger'
-        })
-        return false
-      }
-
-      if (this.form.email.indexOf('@') === -1) {
-        this.$buefy.toast.open({
-          message: 'Email must have @',
-          type: 'is-danger'
-        })
-        return false
-      }
-
-      if (this.form.email.indexOf('.') === -1) {
-        this.$buefy.toast.open({
-          message: 'Email must have .',
           type: 'is-danger'
         })
         return false
