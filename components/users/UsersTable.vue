@@ -59,22 +59,11 @@
         v-slot="props"
         field="Softdelete"
       >
+        
         <b-button
           v-if="props.row.role !== 'ADMINISTRATOR'"
           @click="deleteUser(props.row.id)"
           class="button is-danger"
-        >
-          Soft Delete
-        </b-button>
-      </b-table-column>
-      <b-table-column
-        v-slot="props"
-        field="delete"
-      >
-        <b-button
-          v-if="props.row.role !== 'ADMINISTRATOR'"
-          class="button is-danger"
-          @click="delete props.row.id"
         >
           Delete
         </b-button>
@@ -140,9 +129,9 @@ export default defineComponent({
     },
     trashCancel () {
       this.isModalActive = false
-    },    
+    },
     deleteUser(id){
-      
+
       this.isLoading = true
       this.$axios
         .put(`/api/users/${id}/delete`)
@@ -153,25 +142,6 @@ export default defineComponent({
             message: 'User ' + id + ' deleted',
             type: 'is-success',
             queue: false
-          })
-        })
-    },
-    delete (id) {
-      this.$axios
-        .$delete('/api/users/' + id)
-        .then(() => {
-          this.$buefy.snackbar.open({
-            message: 'User ' + id + ' deleted',
-            type: 'is-success',
-            queue: false
-          })
-          this.$router.go()
-        })
-        .catch((error) => {
-          this.$buefy.snackbar.open({
-            message: error.message,
-            type: 'is-danger',
-            queue: true
           })
         })
     }
