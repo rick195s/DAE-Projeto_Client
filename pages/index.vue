@@ -131,7 +131,7 @@ export default defineComponent({
     this.$axios
       .$get('/api/policies/')
       .then((policies) => {
-        this.policies = policies
+        this.policies = policies.data
       })
       .catch((error) => {
         this.$buefy.snackbar.open({
