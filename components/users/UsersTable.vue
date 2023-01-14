@@ -57,6 +57,18 @@
       </b-table-column>
       <b-table-column
         v-slot="props"
+        field="Softdelete"
+      >
+        <b-button
+          v-if="props.row.role !== 'ADMINISTRATOR'"
+          @click="deleteUser(props.row.id)"
+          class="button is-danger"
+        >
+          Soft Delete
+        </b-button>
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
         field="delete"
       >
         <b-button
@@ -128,6 +140,21 @@ export default defineComponent({
     },
     trashCancel () {
       this.isModalActive = false
+    },    
+    deleteUser(id){
+      
+      this.isLoading = true
+      this.$axios
+        .put(`/api/users/${id}/delete`)
+        .then(() => {
+          this.$store.commit('user', this.form)
+          this.isLoading = false
+          this.$buefy.snackbar.open({
+            message: 'User ' + id + ' deleted',
+            type: 'is-success',
+            queue: false
+          })
+        })
     },
     delete (id) {
       this.$axios
