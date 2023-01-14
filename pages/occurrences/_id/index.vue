@@ -24,18 +24,27 @@
     <title-bar :title-stack="titleStack" />
     <hero-bar>
       Occurrence #{{ $route.params.id }}
-      <action-buttons
-        v-if="['ADMINISTRATOR', 'INSURER_EXPERT'].includes($auth.user.role)"
+      <span
         slot="right"
-        @approved="
-          $refs.historySteps.approved()
-          showRepairShops = true
-        "
-        @declined="
-          $refs.historySteps.declined()
-          showRepairShops = false
-        "
-      />
+        style="display: inline-flex"
+      >
+        <div class="mr-3">
+          <b-button @click="loadAll">
+            <b-icon icon="reload" />
+          </b-button>
+        </div>
+        <action-buttons
+          v-if="['ADMINISTRATOR', 'INSURER_EXPERT'].includes($auth.user.role)"
+          @approved="
+            $refs.historySteps.approved()
+            showRepairShops = true
+          "
+          @declined="
+            $refs.historySteps.declined()
+            showRepairShops = false
+          "
+        />
+      </span>
     </hero-bar>
     <section class="section is-main-section">
       <tiles-block>
@@ -181,7 +190,14 @@ export default defineComponent({
   },
   data () {
     return {
-      titleStack: [this.$auth.user.role === 'ADMINISTRATOR' ? 'Administrator' : (this.$auth.user.role === 'CLIENT' ? 'Client' : 'Expert'), 'Occurrence Details'],
+      titleStack: [
+        this.$auth.user.role === 'ADMINISTRATOR'
+          ? 'Administrator'
+          : this.$auth.user.role === 'CLIENT'
+            ? 'Client'
+            : 'Expert',
+        'Occurrence Details'
+      ],
       files: [],
       isFileCardModalActive: false,
       selectedFile: null,
@@ -202,10 +218,14 @@ export default defineComponent({
     }
   },
   created () {
-    this.getOccurrenceDetails()
-    this.getOccurrenceFiles()
+    this.loadAll()
   },
   methods: {
+    loadAll () {
+      this.isPageLoading = true
+      this.getOccurrenceDetails()
+      this.getOccurrenceFiles()
+    },
     submit () {
       this.uploadFiles()
       if (this.selectedRepairShopId) {
@@ -329,7 +349,6 @@ export default defineComponent({
       this.$axios
         .$get(`/api/occurrences/${this.$route.params.id}`)
         .then((response) => {
-          console.log(response)
           if (response.approvalType === 'APPROVED') {
             this.showRepairShops = true
           }
