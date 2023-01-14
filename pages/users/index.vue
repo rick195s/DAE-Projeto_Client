@@ -15,7 +15,7 @@
     <section class="section is-main-section">
       <card-component class="has-table has-mobile-sort-spaced">
         <users-table
-          :data="users.data"
+          :data="users"
           :loading="loading"
           :total="total"
           :per-page="perPage"
@@ -61,8 +61,8 @@ export default defineComponent({
         .$get(url || '/api/users/')
         .then((users) => {
           console.log(users)
-          this.total = users.length
-          this.users = users
+          this.total = users.metadata.totalCount
+          this.users = users.data
         })
         .catch((error) => {
           this.$buefy.snackbar.open({
