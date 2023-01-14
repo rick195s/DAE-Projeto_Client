@@ -58,11 +58,9 @@
           >
             <b-select
               v-model="form.role"
-              placeholder="Select a role"
+              placeholder="Roles"
+              @input="roleChanged"
             >
-              <option value="CLIENT">
-                Client
-              </option>
               <option value="INSURER_EXPERT">
                 Insurer Expert
               </option>
@@ -72,6 +70,25 @@
             </b-select>
           </b-field>
 
+          <b-field
+            v-if="repairShopsVisivle"
+            horizontal
+            label="Select Repair Shop"
+          >
+            <b-select
+              v-model="form.repairShopId"
+              placeholder="Repair Shops"
+              :loading="repairShopsLoading"
+            >
+              <option
+                v-for="option in repairShops"
+                :key="option.id"
+                :value="option.id"
+              >
+                {{ option.name }}
+              </option>
+            </b-select>
+          </b-field>
           <hr>
           <b-field horizontal>
             <b-field grouped>
@@ -119,19 +136,39 @@ export default defineComponent({
         name: '',
         email: '',
         password: '',
-        role: ''
+        role: '',
+        repairShopId: ''
       },
-      isLoading: false
+      isLoading: false,
+      repairShopsVisivle: false,
+      repairShopsLoading: false,
+      repairShops: []
     }
   },
   methods: {
+    roleChanged () {
+      this.repairShopsVisivle = false
+      if (this.form.role === 'REPAIR_SHOP_EXPERT') {
+        this.repairShopsVisivle = true
+        if (this.repairShops.length === 0) {
+          this.loadRepairShops()
+        }
+      }
+    },
+    loadRepairShops () {
+      this.repairShopsLoading = true
+      this.$axios.$get('/api/repair-shops').then((response) => {
+        this.repairShops = response
+        this.repairShopsLoading = false
+      })
+    },
+
     create () {
       if (!this.verifyForm()) {
         return
       }
 
       this.isLoading = true
-      console.log('is loading : ' + this.isLoading)
       this.$axios.$post('/api/users', this.form).then(() => {
         this.$router.push('/users')
         this.isLoading = false
