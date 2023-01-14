@@ -60,8 +60,9 @@ export default defineComponent({
       this.$axios
         .$get(url || '/api/users/')
         .then((users) => {
-          this.total = users.metadata.totalCount
-          this.users = users.data
+          console.log(users)
+          this.total = users.length
+          this.users = users
         })
         .catch((error) => {
           this.$buefy.snackbar.open({
