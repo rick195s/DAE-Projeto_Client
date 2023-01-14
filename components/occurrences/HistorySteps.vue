@@ -4,14 +4,26 @@
     :type="stepType"
     :has-navigation="false"
   >
-    <b-step-item :icon="iconStep0">
+    <b-step-item
+      :clickable="false"
+      :icon="iconStep0"
+    >
       Waiting Approval From Insurance
     </b-step-item>
-    <b-step-item icon="check" />
-    <b-step-item icon="account-question-outline">
+    <b-step-item
+      :clickable="false"
+      icon="check"
+    />
+    <b-step-item
+      :clickable="false"
+      icon="account-question-outline"
+    >
       Waiting Repair From Repair Expert
     </b-step-item>
-    <b-step-item icon="check-all" />
+    <b-step-item
+      :clickable="false"
+      icon="check-all"
+    />
   </b-steps>
 </template>
 <script>
