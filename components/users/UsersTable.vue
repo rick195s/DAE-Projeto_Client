@@ -136,7 +136,7 @@ export default defineComponent({
     },
     deleteUser (id) {
       this.isLoading = true
-      this.$axios.put(`/api/users/${id}/delete`).then(() => {
+      this.$axios.delete(`/api/users/${id}`).then(() => {
         this.$store.commit('user', this.form)
         this.isLoading = false
         this.$buefy.snackbar.open({
